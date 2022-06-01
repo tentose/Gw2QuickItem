@@ -1,0 +1,32 @@
+﻿{
+  "name": "Quick Items",
+  "version": "0.3.2",
+  "namespace": "pentose.quickitems",
+  "package": "QuickItem.dll",
+  "manifest_version": 1,
+
+  "description": "Searches for items across your account",
+  "dependencies": {
+    "bh.blishhud": "~0.11.4"
+  },
+  "url": "https://github.com/blish-hud/Blish-HUD",
+  "contributors": [
+    {
+      "name": "Pentose",
+      "username": "Pentose.3479",
+      "url": "https://github.com/tentose"
+    }
+  ],
+  "directories": [ "quickitems" ],
+  "enabled_without_gw2": false,
+  "api_permissions": {
+    "account": {
+      "optional": false,
+      "details": "Needed to review the item in your inventory."
+    },
+    "characters": {
+      "optional": false,
+      "details": "Needed to review the item in your inventory."
+    }
+  }
+}
