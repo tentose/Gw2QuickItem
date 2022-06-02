@@ -15,7 +15,11 @@ namespace QuickItem
 
         public ViewContainer GroupConfigContainer { get; set; }
 
+        private FlowPanel _layout;
+
         public event EventHandler<ControlActivatedEventArgs> GroupSelectionChanged;
+
+        public event EventHandler CopySelectedItem;
 
         public GroupsManagementView(GroupCollection groups)
         {
@@ -24,19 +28,45 @@ namespace QuickItem
 
         protected override void Build(Container buildPanel)
         {
+            _layout = new FlowPanel
+            {
+                WidthSizingMode = SizingMode.Fill,
+                HeightSizingMode = SizingMode.Fill,
+                ControlPadding = new Vector2(10, 10),
+                FlowDirection = ControlFlowDirection.SingleLeftToRight,
+                Parent = buildPanel,
+            };
+
+            var groupSelectionPanelContainer = new Panel()
+            {
+                Size = new Point(200, _layout.Height),
+                HeightSizingMode = SizingMode.Fill,
+                Parent = _layout,
+            };
+
             var groupSelectionPanel = new Panel()
             {
                 ShowBorder = true,
-                Size = new Point(200, buildPanel.Height),
+                WidthSizingMode = SizingMode.Fill,
+                HeightSizingMode = SizingMode.Fill,
                 Title = "Groups",
-                Parent = buildPanel,
+                Parent = groupSelectionPanelContainer,
                 CanScroll = true,
             };
 
-            GroupsList = new Menu()
+            var copyGroupButton = new StandardButton()
             {
-                Size = groupSelectionPanel.ContentRegion.Size,
-                MenuItemHeight = 40,
+                Text = "Copy",
+                Width = 95,
+                Location = new Point(100, 5),
+                Parent = groupSelectionPanelContainer,
+            };
+            copyGroupButton.Click += CopyGroupButton_Click;
+
+            GroupsList = new InternalMenu()
+            {
+                WidthSizingMode = SizingMode.Fill,
+                MenuItemHeight = 30,
                 Parent = groupSelectionPanel,
                 CanSelect = true,
             };
@@ -46,10 +76,17 @@ namespace QuickItem
             GroupConfigContainer = new ViewContainer()
             {
                 FadeView = true,
-                Size = new Point(buildPanel.Width - groupSelectionPanel.Width, groupSelectionPanel.Height),
-                Location = new Point(groupSelectionPanel.Width, 0),
-                Parent = buildPanel
+                //Size = new Point(buildPanel.ContentRegion.Width - groupSelectionPanel.Width, groupSelectionPanel.Height),
+                WidthSizingMode = SizingMode.Fill,
+                HeightSizingMode = SizingMode.Fill,
+                //Location = new Point(groupSelectionPanel.Width, 0),
+                Parent = _layout
             };
+        }
+
+        private void CopyGroupButton_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
+        {
+            CopySelectedItem?.Invoke(this, EventArgs.Empty);
         }
 
         private void GroupsList_ItemSelected(object sender, ControlActivatedEventArgs e)

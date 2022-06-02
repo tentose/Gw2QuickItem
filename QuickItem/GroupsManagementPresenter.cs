@@ -18,8 +18,23 @@ namespace QuickItem
         protected override Task<bool> Load(IProgress<string> progress)
         {
             this.View.GroupSelectionChanged += View_GroupSelectionChanged;
+            this.View.CopySelectedItem += View_CopySelectedItem;
 
             return base.Load(progress);
+        }
+
+        private void View_CopySelectedItem(object sender, EventArgs e)
+        {
+            var menuItem = this.View.GroupsList.SelectedMenuItem as MenuItem;
+            if (menuItem != null)
+            {
+                var name = menuItem.Text;
+                var groupInfo = Model.FirstOrDefault((info) => info.Name == name);
+                if (groupInfo != null)
+                {
+                    Model.CopyGroup(groupInfo);
+                }
+            }
         }
 
         private void Model_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -34,11 +49,14 @@ namespace QuickItem
                         var item = e.NewItems[0] as ItemGroupInfo;
                         MenuItem menuItem = new MenuItem(item.Name);
                         groupListItems.Insert(e.NewStartingIndex, menuItem);
+                        menuItem.Parent = this.View.GroupsList;
+                        this.View.GroupsList.Invalidate();
                         break;
                     }
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     groupListItems.RemoveAt(e.OldStartingIndex);
+                    this.View.GroupsList.Invalidate();
                     break;
 
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
@@ -46,6 +64,8 @@ namespace QuickItem
                         var item = e.NewItems[0] as ItemGroupInfo;
                         MenuItem menuItem = new MenuItem(item.Name);
                         groupListItems[e.OldStartingIndex] = menuItem;
+                        menuItem.Parent = this.View.GroupsList;
+                        this.View.GroupsList.Invalidate();
                         break;
                     }
 
@@ -54,6 +74,7 @@ namespace QuickItem
                         var item = groupListItems.ElementAt(e.OldStartingIndex);
                         groupListItems.RemoveAt(e.OldStartingIndex);
                         groupListItems.Insert(e.NewStartingIndex, item);
+                        this.View.GroupsList.Invalidate();
                         break;
                     }
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:

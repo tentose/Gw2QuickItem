@@ -28,6 +28,7 @@ namespace QuickItem
             groupCollection.InitializeFromDisk();
 
             Tabs.Add(new Tab(AsyncTexture2D.FromAssetId(156909), () => new GroupsManagementView(groupCollection), "stuff"));
+            Tabs.Add(new Tab(AsyncTexture2D.FromAssetId(156909), () => new GroupsManagementView(groupCollection), "stuff2"));
         }
     }
 }

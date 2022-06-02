@@ -20,7 +20,7 @@ namespace QuickItem
     {
         private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
 
-        private const int ICON_SIZE = 61;
+        private const int DEFAULT_ICON_SIZE = 61;
 
         private static Texture2D s_itemPlaceholder;
 
@@ -48,14 +48,14 @@ namespace QuickItem
 
         public ItemIcon()
         {
-            this.Size = new Point(ICON_SIZE, ICON_SIZE);
+            this.Size = new Point(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
             m_image = s_itemPlaceholder;
             m_item = new ItemIconInfo();
         }
 
         public ItemIcon(ItemIconInfo info)
         {
-            this.Size = new Point(ICON_SIZE, ICON_SIZE);
+            this.Size = new Point(info.IconSize, info.IconSize);
             m_image = s_itemPlaceholder;
             m_item = info;
         }
@@ -136,53 +136,11 @@ namespace QuickItem
             throw new NotImplementedException();
         }
 
-        private bool _dragging;
-        public bool Dragging
-        {
-            get => _dragging;
-            private set => SetProperty(ref _dragging, value);
-        }
-
-        private Point _dragMouseStart = Point.Zero;
-        private Point _dragDesiredLocation = Point.Zero;
-        private SortedSet<Point> _possibleLocations;
-        public override void DoUpdate(GameTime gameTime)
-        {
-            if (this.Dragging)
-            {
-                var offset = Input.Mouse.Position - _dragMouseStart;
-                _dragDesiredLocation += offset;
-                //Location = GetClosestLocationToPossibleLocations(_dragDesiredLocation);
-
-                _dragMouseStart = Input.Mouse.Position;
-            }
-        }
-
-        private void OnGlobalMouseRelease(object sender, MouseEventArgs e)
-        {
-            if (this.Visible && this.Dragging)
-            {
-                this.Dragging = false;
-                GameService.Input.Mouse.LeftMouseButtonReleased -= OnGlobalMouseRelease;
-            }
-        }
-
-        protected override void OnLeftMouseButtonPressed(MouseEventArgs e)
-        {
-            GameService.Input.Mouse.LeftMouseButtonReleased += OnGlobalMouseRelease;
-            //this.Dragging = true;
-            //GetPossibleLocations();
-            _dragMouseStart = Input.Mouse.Position;
-            _dragDesiredLocation = Location;
-
-            base.OnLeftMouseButtonPressed(e);
-        }
-
         protected override void OnClick(MouseEventArgs e)
         {
             base.OnClick(e);
 
-            if (AllowActivation && m_item.ItemAssetId != null)
+            if (AllowActivation && m_item.ItemAssetId != 0)
             {
                 var iconPath = Content.DatAssetCache.GetLocalTexturePath(m_item.ItemAssetId);
 

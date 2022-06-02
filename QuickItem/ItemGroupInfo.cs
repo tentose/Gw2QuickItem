@@ -12,13 +12,45 @@ namespace QuickItem
     {
         public Guid Guid { get; set; }
 
+        private string _name;
         [JsonIgnore]
-        public string Name { get; set; }
+        public string Name { 
+            get 
+            {
+                return _name;
+            }
+            set 
+            {
+                var oldName = _name;
+                _name = value;
+                OnGroupChanged(oldName);
+            }
+        }
 
-        public string BoundCharacter { get; set; }
+        private List<ItemIconInfo> _items;
+        public List<ItemIconInfo> Items
+        {
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                _items = value;
+                OnGroupChanged();
+            }
+        }
 
-        public string BoundAccount { get; set; }
+        public event EventHandler<string> GroupChanged;
+        private void OnGroupChanged(string oldName = null)
+        {
+            if (!PauseChangedNotifications)
+            {
+                GroupChanged?.Invoke(this, oldName);
+            }
+        }
 
-        public List<ItemIconInfo> Items { get; set; }
+        [JsonIgnore]
+        public bool PauseChangedNotifications { get; set; } = false;
     }
 }

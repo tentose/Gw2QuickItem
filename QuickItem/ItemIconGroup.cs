@@ -77,6 +77,8 @@ namespace QuickItem
 
         public GroupDragMode DragMode { get; set; } = GroupDragMode.None;
 
+        private bool _pauseLayout = false;
+
         private ItemGroupInfo _groupInfo = new ItemGroupInfo();
         public ItemGroupInfo GroupInfo
         {
@@ -86,6 +88,7 @@ namespace QuickItem
             }
             set
             {
+                _pauseLayout = true;
                 _groupInfo = value;
                 foreach (var itemInfo in _groupInfo.Items)
                 {
@@ -93,8 +96,12 @@ namespace QuickItem
                     icon.Parent = this;
                     icon.Location = itemInfo.IconPosition;
                 }
+                _pauseLayout = false;
+                FixSize();
             }
         }
+
+        public event EventHandler ItemsChanged;
 
         public ItemIconGroup()
         {
@@ -103,14 +110,20 @@ namespace QuickItem
         protected override void OnChildAdded(ChildChangedEventArgs e)
         {
             _items.Add(e.ChangedChild as ItemIcon);
-            FixSize();
+            if (!_pauseLayout)
+            {
+                FixSize();
+            }
             base.OnChildAdded(e);
         }
 
         protected override void OnChildRemoved(ChildChangedEventArgs e)
         {
             _items.Remove(e.ChangedChild as ItemIcon);
-            FixSize();
+            if (!_pauseLayout)
+            {
+                FixSize();
+            }
             base.OnChildRemoved(e);
         }
 
@@ -199,9 +212,21 @@ namespace QuickItem
             if (this.Visible && this.Dragging)
             {
                 this.Dragging = false;
-                _draggedItem = null;
                 GameService.Input.Mouse.LeftMouseButtonReleased -= OnGlobalMouseRelease;
                 FixSize();
+
+                if (_draggedItem != null)
+                {
+                    _draggedItem = null;
+
+                    foreach (var item in this.Items)
+                    {
+                        item.Item.IconPosition = item.Location;
+                    }
+                    this.GroupInfo.Items = this.Items.Select(item => item.Item).ToList();
+
+                    OnItemsChanged();
+                }
             }
         }
 
@@ -214,9 +239,20 @@ namespace QuickItem
                 this.Dragging = true;
                 _dragMouseStart = Input.Mouse.Position;
 
-                //bool draggingItem = GameService.Input.Keyboard.ActiveModifiers.HasFlag(Microsoft.Xna.Framework.Input.ModifierKeys.Shift);
+                var effectiveDragMode = DragMode;
+                if (GameService.Input.Keyboard.ActiveModifiers.HasFlag(Microsoft.Xna.Framework.Input.ModifierKeys.Shift))
+                {
+                    if (DragMode == GroupDragMode.Group)
+                    {
+                        effectiveDragMode = GroupDragMode.Item;
+                    }
+                    else if (DragMode == GroupDragMode.Item)
+                    {
+                        effectiveDragMode = GroupDragMode.Group;
+                    }
+                }
 
-                if (draggingItem)
+                if (effectiveDragMode == GroupDragMode.Item)
                 {
                     // Dragging an item
                     _draggedItem = GetChildOverMousePosition(e.MousePosition);
@@ -235,6 +271,7 @@ namespace QuickItem
                     else
                     {
                         this.Dragging = false;
+                        GameService.Input.Mouse.LeftMouseButtonReleased += OnGlobalMouseRelease;
                     }
                 }
             }
@@ -321,6 +358,11 @@ namespace QuickItem
                 }
             }
             return minPoint;
+        }
+
+        private void OnItemsChanged()
+        {
+            ItemsChanged?.Invoke(this, null);
         }
 
 
