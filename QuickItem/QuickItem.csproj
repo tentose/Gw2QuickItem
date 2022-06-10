@@ -234,20 +234,36 @@
     <Reference Include="System.Xml.ReaderWriter" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GroupCollection.cs" />
-    <Compile Include="GroupConfigPresenter.cs" />
-    <Compile Include="GroupConfigView.cs" />
-    <Compile Include="GroupsManagementPresenter.cs" />
-    <Compile Include="GroupsManagementView.cs" />
+    <Compile Include="Controls\IconButton.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="ItemFinderNative.cs" />
+    <Compile Include="Models\GroupCollection.cs" />
+    <Compile Include="Presenters\LayoutConfigPresenter.cs" />
+    <Compile Include="Presenters\GroupConfigPresenter.cs" />
+    <Compile Include="Views\LayoutConfigView.cs" />
+    <Compile Include="Views\GroupConfigView.cs" />
+    <Compile Include="INamedObject.cs" />
+    <Compile Include="Models\InfoCollection.cs" />
+    <Compile Include="Presenters\InfoManagementPresenter.cs" />
+    <Compile Include="Views\InfoManagementView.cs" />
+    <Compile Include="INotifyInfoPropertyChanged.cs" />
+    <Compile Include="Presenters\LayoutsManagementPresenter.cs" />
+    <Compile Include="Presenters\GroupsManagementPresenter.cs" />
+    <Compile Include="Views\LayoutsManagementView.cs" />
+    <Compile Include="Views\GroupsManagementView.cs" />
     <Compile Include="InternalMenu.cs" />
-    <Compile Include="ItemFinder.cs" />
-    <Compile Include="ItemGroupInfo.cs" />
-    <Compile Include="ItemIconGroup.cs" />
+    <Compile Include="ItemFinderManaged.cs" />
+    <Compile Include="Models\ItemGroupInfo.cs" />
+    <Compile Include="Controls\ItemIconGroup.cs" />
     <Compile Include="ItemLayout.cs" />
     <Compile Include="ItemRequestAggregator.cs" />
-    <Compile Include="ItemIcon.cs" />
-    <Compile Include="ItemIconInfo.cs" />
+    <Compile Include="Controls\ItemIcon.cs" />
+    <Compile Include="Models\ItemIconInfo.cs" />
     <Compile Include="ItemWindow.cs" />
+    <Compile Include="Models\LayoutCollection.cs" />
+    <Compile Include="Controls\LayoutContainer.cs" />
+    <Compile Include="Models\LayoutInfo.cs" />
     <Compile Include="ManagementWindow.cs" />
     <Compile Include="QuickItemModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -347,7 +363,8 @@
   <Import Project="..\packages\BlishHUD.0.11.8-ci.88\build\BlishHUD.targets" Condition="Exists('..\packages\BlishHUD.0.11.8-ci.88\build\BlishHUD.targets')" />
   <Target Name="MoveOpenCvExternToRef" BeforeTargets="BuildBlishHUDModule">
     <ItemGroup>
-      <DllFiles Include="$(OutDir)dll\**" />
+      <!--OpenCvSharp files <DllFiles Include="$(OutDir)dll\**" />-->
+      <DllFiles Include="$(SolutionDir)x64\Debug\*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(DllFiles)" DestinationFolder="$(OutDir)ref\dll\%(RecursiveDir)" />
     <RemoveDir Directories="$(OutDir)dll" />

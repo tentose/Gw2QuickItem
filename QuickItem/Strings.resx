@@ -120,4 +120,34 @@
   <data name="ItemContextMenu_SetItem" xml:space="preserve">
     <value>Set Item</value>
   </data>
+  <data name="Settings_ActiveLayout_Description" xml:space="preserve">
+    <value>Name of the active layout. </value>
+  </data>
+  <data name="Settings_ActiveLayout_Name" xml:space="preserve">
+    <value>Active Layout</value>
+  </data>
+  <data name="Settings_SearchAcceptThreshold_Description" xml:space="preserve">
+    <value>Threshold for when an item is considered found when searching. Smaller values will have fewer false positives, but may reject valid items. Larger values will be more tolerant, but may introduce false positives.
+Min: 0.05
+Default: 0.1
+Max: 0.5</value>
+  </data>
+  <data name="Settings_SearchAcceptThreshold_Name" xml:space="preserve">
+    <value>Search threshold</value>
+  </data>
+  <data name="Settings_SearchImageScale_Description" xml:space="preserve">
+    <value>Scale down the image when searching to improve search performance. Smaller values may make the search inaccurate (fail to find the item or finds the wrong item). Larger values will make the search slower.
+Min: 0.5
+Default: 0.6
+Max: 1.0</value>
+  </data>
+  <data name="Settings_SearchImageScale_Name" xml:space="preserve">
+    <value>Search image scale</value>
+  </data>
+  <data name="Settings_VisibilityHotkey_Description" xml:space="preserve">
+    <value>Hotkey to toggle visibility of all items</value>
+  </data>
+  <data name="Settings_VisibilityHotkey_Name" xml:space="preserve">
+    <value>Visibility Toggle</value>
+  </data>
 </root>

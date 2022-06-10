@@ -99,21 +99,21 @@ namespace QuickItem
             CanClose = false;
             Title = "";
 
-            if (m_group != null)
-            {
-                var data = ItemIconGroup.Serialize(m_group);
-                var path = Path.Combine(QuickItemModule.Instance.GroupsDirectory, "group.json");
-                File.WriteAllText(path, data);
-            }
-            else
-            {
-                var path = Path.Combine(QuickItemModule.Instance.GroupsDirectory, "group.json");
-                var data = File.ReadAllText(path);
-                m_group = ItemIconGroup.Deserialize(data);
-                m_group.Parent = GameService.Graphics.SpriteScreen;
+            //if (m_group != null)
+            //{
+            //    var data = ItemIconGroup.Serialize(m_group);
+            //    var path = Path.Combine(QuickItemModule.Instance.GroupsDirectory, "group.json");
+            //    File.WriteAllText(path, data);
+            //}
+            //else
+            //{
+            //    var path = Path.Combine(QuickItemModule.Instance.GroupsDirectory, "group.json");
+            //    var data = File.ReadAllText(path);
+            //    m_group = ItemIconGroup.Deserialize(data);
+            //    m_group.Parent = GameService.Graphics.SpriteScreen;
 
-                m_group.Invalidate();
-            }
+            //    m_group.Invalidate();
+            //}
 
             Task.Run(async () =>
             {

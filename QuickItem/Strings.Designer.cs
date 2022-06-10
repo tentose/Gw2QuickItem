@@ -68,5 +68,83 @@ namespace QuickItem {
                 return ResourceManager.GetString("ItemContextMenu_SetItem", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the active layout. .
+        /// </summary>
+        internal static string Settings_ActiveLayout_Description {
+            get {
+                return ResourceManager.GetString("Settings_ActiveLayout_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active Layout.
+        /// </summary>
+        internal static string Settings_ActiveLayout_Name {
+            get {
+                return ResourceManager.GetString("Settings_ActiveLayout_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Threshold for when an item is considered found when searching. Smaller values will have fewer false positives, but may reject valid items. Larger values will be more tolerant, but may introduce false positives.
+        ///Min: 0.05
+        ///Default: 0.1
+        ///Max: 0.5.
+        /// </summary>
+        internal static string Settings_SearchAcceptThreshold_Description {
+            get {
+                return ResourceManager.GetString("Settings_SearchAcceptThreshold_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search threshold.
+        /// </summary>
+        internal static string Settings_SearchAcceptThreshold_Name {
+            get {
+                return ResourceManager.GetString("Settings_SearchAcceptThreshold_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scale down the image when searching to improve search performance. Smaller values may make the search inaccurate (fail to find the item or finds the wrong item). Larger values will make the search slower.
+        ///Min: 0.5
+        ///Default: 0.6
+        ///Max: 1.0.
+        /// </summary>
+        internal static string Settings_SearchImageScale_Description {
+            get {
+                return ResourceManager.GetString("Settings_SearchImageScale_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search image scale.
+        /// </summary>
+        internal static string Settings_SearchImageScale_Name {
+            get {
+                return ResourceManager.GetString("Settings_SearchImageScale_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hotkey to toggle visibility of all items.
+        /// </summary>
+        internal static string Settings_VisibilityHotkey_Description {
+            get {
+                return ResourceManager.GetString("Settings_VisibilityHotkey_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visibility Toggle.
+        /// </summary>
+        internal static string Settings_VisibilityHotkey_Name {
+            get {
+                return ResourceManager.GetString("Settings_VisibilityHotkey_Name", resourceCulture);
+            }
+        }
     }
 }

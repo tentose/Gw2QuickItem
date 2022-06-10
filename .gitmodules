@@ -1,0 +1,3 @@
+[submodule "ItemFinder/External/opencv"]
+	path = ItemFinder/External/opencv
+	url = https://github.com/opencv/opencv.git
