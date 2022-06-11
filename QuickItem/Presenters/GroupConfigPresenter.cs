@@ -13,10 +13,13 @@ namespace QuickItem
 {
     public enum IconSize
     {
-        Tiny = 41,
-        Small = 51,
-        Normal = 61,
-        Large = 71,
+        Ant = 20,
+        Tiny = 36,
+        Small = 45,
+        Normal = 50,
+        Large = 56,
+        Larger = 62,
+        Largest = 74,
     }
 
     public class GroupConfigPresenter : Presenter<GroupConfigView, ItemGroupInfo>
@@ -35,7 +38,14 @@ namespace QuickItem
             GroupSettings.Add(nameSetting);
             nameSetting.SettingChanged += NameSetting_SettingChanged;
 
-            var iconSizeSetting = SettingEntry<IconSize>.InitSetting(IconSize.Normal);
+            // Use the first item as the icon size of the group
+            var groupIconSize = IconSize.Larger;
+            var firstItem = Model.Items.FirstOrDefault();
+            if (firstItem != null)
+            {
+                groupIconSize = FindClosestSize(firstItem.IconSize);
+            }
+            var iconSizeSetting = SettingEntry<IconSize>.InitSetting(groupIconSize);
             iconSizeSetting.GetDisplayNameFunc = () => "Icon Size";
             iconSizeSetting.GetDescriptionFunc = () => "Icon size";
             GroupSettings.Add(iconSizeSetting);
@@ -45,6 +55,22 @@ namespace QuickItem
             View.AddToLayoutClicked += View_AddToLayoutClicked;
 
             return base.Load(progress);
+        }
+
+        private IconSize FindClosestSize(int size)
+        {
+            var minDiff = int.MaxValue;
+            IconSize minValue = IconSize.Larger;
+            foreach (var iconSize in (IconSize[])Enum.GetValues(typeof(IconSize)))
+            {
+                var absDiff = Math.Abs(size - (int)iconSize);
+                if (absDiff < minDiff)
+                {
+                    minDiff = absDiff;
+                    minValue = iconSize;
+                }
+            }
+            return minValue;
         }
 
         private void View_AddToLayoutClicked(object sender, EventArgs e)

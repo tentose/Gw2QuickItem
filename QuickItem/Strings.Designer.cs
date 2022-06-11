@@ -61,6 +61,51 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete this group.
+        /// </summary>
+        internal static string ContextMenu_Group_Delete {
+            get {
+                return ResourceManager.GetString("ContextMenu_Group_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit groups....
+        /// </summary>
+        internal static string ContextMenu_Group_EditGroups {
+            get {
+                return ResourceManager.GetString("ContextMenu_Group_EditGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete this item.
+        /// </summary>
+        internal static string ContextMenu_Item_Delete {
+            get {
+                return ResourceManager.GetString("ContextMenu_Item_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit this item....
+        /// </summary>
+        internal static string ContextMenu_Item_EditItem {
+            get {
+                return ResourceManager.GetString("ContextMenu_Item_EditItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit layouts....
+        /// </summary>
+        internal static string ContextMenu_Layout_EditLayouts {
+            get {
+                return ResourceManager.GetString("ContextMenu_Layout_EditLayouts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Item.
         /// </summary>
         internal static string ItemContextMenu_SetItem {

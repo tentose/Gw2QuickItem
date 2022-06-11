@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ContextMenu_Group_Delete" xml:space="preserve">
+    <value>Delete this group</value>
+  </data>
+  <data name="ContextMenu_Group_EditGroups" xml:space="preserve">
+    <value>Edit groups...</value>
+  </data>
+  <data name="ContextMenu_Item_Delete" xml:space="preserve">
+    <value>Delete this item</value>
+  </data>
+  <data name="ContextMenu_Item_EditItem" xml:space="preserve">
+    <value>Edit this item...</value>
+  </data>
+  <data name="ContextMenu_Layout_EditLayouts" xml:space="preserve">
+    <value>Edit layouts...</value>
+  </data>
   <data name="ItemContextMenu_SetItem" xml:space="preserve">
     <value>Set Item</value>
   </data>

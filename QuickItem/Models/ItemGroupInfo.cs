@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Blish_HUD;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace QuickItem
 {
     public class ItemGroupInfo : INamedObject, INotifyInfoPropertyChanged
     {
+        private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
+
         public Guid Guid { get; set; } = Guid.NewGuid();
 
         private string _name;
@@ -37,11 +40,27 @@ namespace QuickItem
             }
             set
             {
+                // Clear existing event registrations
+                foreach (var item in _items)
+                {
+                    item.PropertyChanged -= Item_PropertyChanged;
+                }
                 _items.CollectionChanged -= _items_CollectionChanged;
+                
+                // Set values and register for events
                 _items = value;
                 _items.CollectionChanged += _items_CollectionChanged;
+                foreach (var item in _items)
+                {
+                    item.PropertyChanged += Item_PropertyChanged;
+                }
                 OnPropertyChanged();
             }
+        }
+
+        private void Item_PropertyChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged();
         }
 
         public event EventHandler<string> PropertyChanged;
@@ -63,6 +82,26 @@ namespace QuickItem
 
         private void _items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            // Below handling of changes assumes the underlying collection never fires a multi-item change, which is true for
+            // the default implementation of ObservableCollection used by GroupCollection.
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    {
+                        var item = e.NewItems[0] as ItemIconInfo;
+                        item.PropertyChanged += Item_PropertyChanged;
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    {
+                        var item = e.OldItems[0] as ItemIconInfo;
+                        item.PropertyChanged -= Item_PropertyChanged;
+                    }
+                    break;
+                default:
+                    Logger.Warn($"Unhandled collection changed event in ItemGroupInfo: {e.Action}");
+                    break;
+            }
             OnPropertyChanged();
         }
     }

@@ -49,7 +49,7 @@ namespace QuickItem
 
         public Point IconPosition { get; set; }
 
-        private int _iconSize = 61;
+        private int _iconSize = ((int)QuickItem.IconSize.Larger);
         public int IconSize
         {
             get { return _iconSize; }
@@ -62,6 +62,13 @@ namespace QuickItem
 
         public ItemIconInfo()
         {
+        }
+
+        public void UpdateItem(int itemId, int assetId)
+        {
+            _itemId = itemId;
+            _itemAssetId = assetId;
+            OnPropertyChanged();
         }
 
         public event EventHandler PropertyChanged;

@@ -5,6 +5,7 @@ using Blish_HUD.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
+using QuickItem.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,13 +17,13 @@ using System.Threading.Tasks;
 
 namespace QuickItem
 {
-    public class ItemIcon : Control
+    public class ItemIcon : Control, IHasContextMenu
     {
         private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
 
-        private const int DEFAULT_ICON_SIZE = 61;
+        private const int DEFAULT_ICON_SIZE = ((int)IconSize.Larger);
 
-        private static Texture2D s_itemPlaceholder;
+        private static Texture2D ItemPlaceholder;
 
         public static async Task LoadIconResources()
         {
@@ -30,34 +31,45 @@ namespace QuickItem
             {
                 var contentsManager = QuickItemModule.Instance.ContentsManager;
 
-                s_itemPlaceholder = contentsManager.GetTexture(@"Textures\ExoticBorder.png");
+                ItemPlaceholder = contentsManager.GetTexture(@"Textures\ExoticBorder.png");
             });
         }
 
-        private AsyncTexture2D m_image;
+        private AsyncTexture2D _image;
         private ContextMenuStrip m_contextMenu;
-        private ItemIconInfo m_item;
+        private ItemIconInfo _item;
         public ItemIconInfo Item
         {
-            get => m_item;
+            get => _item;
         }
 
-        private bool m_shouldLoadImage = true;
+        private bool _hasBeenVisible = false;
 
         public bool AllowActivation { get; set; } = true;
+
+        public event EventHandler DeleteRequested;
 
         public ItemIcon()
         {
             this.Size = new Point(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
-            m_image = s_itemPlaceholder;
-            m_item = new ItemIconInfo();
+            _image = ItemPlaceholder;
+            _item = new ItemIconInfo();
         }
 
         public ItemIcon(ItemIconInfo info)
         {
             this.Size = new Point(info.IconSize, info.IconSize);
-            m_image = s_itemPlaceholder;
-            m_item = info;
+            _image = ItemPlaceholder;
+            _item = info;
+            _item.PropertyChanged += _item_PropertyChanged;
+        }
+
+        private void _item_PropertyChanged(object sender, EventArgs e)
+        {
+            if (_hasBeenVisible)
+            {
+                LoadItemImage();
+            }
         }
 
         public void LoadItemImage()
@@ -66,26 +78,26 @@ namespace QuickItem
             {
                 try
                 {
-                    if (m_item.ItemId != 0)
+                    if (_item.ItemId != 0)
                     {
-                        if (m_item.ItemAssetId == 0)
+                        if (_item.ItemAssetId == 0)
                         {
-                            m_item.ItemAssetId = await GetIconAssetId();
+                            _item.ItemAssetId = await GetIconAssetId();
                         }
 
-                        if (m_item.ItemAssetId != 0)
+                        if (_item.ItemAssetId != 0)
                         {
-                            m_image = AsyncTexture2D.FromAssetId(m_item.ItemAssetId);
+                            _image = AsyncTexture2D.FromAssetId(_item.ItemAssetId);
                         }
                         else
                         {
-                            m_shouldLoadImage = true;
+                            _hasBeenVisible = false;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, $"Failed loading item image {m_item.ItemId}");
+                    Logger.Error(e, $"Failed loading item image {_item.ItemId}");
                 }
                 Invalidate();
             });
@@ -93,12 +105,12 @@ namespace QuickItem
 
         private async Task<int> GetIconAssetId()
         {
-            if (m_item.ItemId == 0)
+            if (_item.ItemId == 0)
             {
                 return 0;
             }
 
-            var item = await QuickItemModule.Instance.Gw2ApiManager.Gw2ApiClient.V2.Items.GetAsync(m_item.ItemId);
+            var item = await QuickItemModule.Instance.Gw2ApiManager.Gw2ApiClient.V2.Items.GetAsync(_item.ItemId);
             var iconUrl = item.Icon.Url.ToString();
             var iconFileName = Path.GetFileNameWithoutExtension(iconUrl);
             if (int.TryParse(iconFileName, out int assetId))
@@ -125,24 +137,30 @@ namespace QuickItem
         private void BuildAndShowContextMenu()
         {
             m_contextMenu = new ContextMenuStrip();
-            var setItemMenuItem = m_contextMenu.AddMenuItem(Strings.ItemContextMenu_SetItem);
-            setItemMenuItem.Click += SetItemMenuItem_Click;
+
+            var menuItems = GetContextMenuItems();
+            m_contextMenu.AddMenuItems(menuItems);
+            var ancestorMenuItems = this.GetAncestors().OfType<IHasContextMenu>().SelectMany(ancestor => ancestor.GetContextMenuItems());
+            m_contextMenu.AddMenuItems(ancestorMenuItems);
 
             m_contextMenu.Show(this);
         }
 
-        private void SetItemMenuItem_Click(object sender, MouseEventArgs e)
+        private void ItemSearch_SearchCompleted(object sender, ItemEditControl.SearchResult e)
         {
-            throw new NotImplementedException();
+            if (e != null)
+            {
+                this.Item.UpdateItem(e.ItemId, e.AssetId);
+            }
         }
 
         protected override void OnClick(MouseEventArgs e)
         {
             base.OnClick(e);
 
-            if (AllowActivation && m_item.ItemAssetId != 0)
+            if (AllowActivation && _item.ItemAssetId != 0)
             {
-                var iconPath = Content.DatAssetCache.GetLocalTexturePath(m_item.ItemAssetId);
+                var iconPath = Content.DatAssetCache.GetLocalTexturePath(_item.ItemAssetId);
 
                 if (File.Exists(iconPath))
                 {
@@ -152,7 +170,7 @@ namespace QuickItem
                         Blish_HUD.Controls.Intern.Keyboard.Stroke(Blish_HUD.Controls.Extern.VirtualKeyShort.KEY_I);
                         await Task.Delay(300);
 
-                        var point = ItemFinderNative.Instance.FindItem(m_item.ItemAssetId);
+                        var point = ItemFinderNative.Instance.FindItem(_item.ItemAssetId);
 
                         if (point.HasValue)
                         {
@@ -173,16 +191,37 @@ namespace QuickItem
             }
         }
 
+        public IEnumerable<ContextMenuStripItem> GetContextMenuItems()
+        {
+            var deleteItem = new ContextMenuStripItem(Strings.ContextMenu_Item_Delete);
+            deleteItem.Click += DeleteItem_Click;
+            yield return deleteItem;
+
+            var editItem = new ContextMenuStripItem(Strings.ContextMenu_Item_EditItem);
+            editItem.Click += EditItem_Click;
+            yield return editItem;
+        }
+
+        private void DeleteItem_Click(object sender, MouseEventArgs e)
+        {
+            DeleteRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void EditItem_Click(object sender, MouseEventArgs e)
+        {
+            ItemEditControl itemSearch = new ItemEditControl();
+            itemSearch.SearchCompleted += ItemSearch_SearchCompleted;
+        }
 
         protected override void Paint(SpriteBatch spriteBatch, Rectangle bounds)
         {
-            if (m_shouldLoadImage)
+            if (!_hasBeenVisible)
             {
-                m_shouldLoadImage = false;
+                _hasBeenVisible = true;
                 LoadItemImage();
             }
-            spriteBatch.DrawOnCtrl(this, m_image, bounds);
-            if (m_item != null)
+            spriteBatch.DrawOnCtrl(this, _image, bounds);
+            if (_item != null)
             {
                 //spriteBatch.DrawOnCtrl(this, s_rarityToBorder[m_itemInfo.Rarity], bounds);
 

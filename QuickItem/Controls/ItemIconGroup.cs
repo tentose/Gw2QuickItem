@@ -24,7 +24,7 @@ namespace QuickItem
         Item,
     }
 
-    public class ItemIconGroup : Container
+    public class ItemIconGroup : Container, IHasContextMenu
     {
         private List<ItemIcon> _items = new List<ItemIcon>();
         public List<ItemIcon> Items { get => _items; }
@@ -76,28 +76,52 @@ namespace QuickItem
 
         public event EventHandler PositionChanged;
 
+        public event EventHandler DeleteRequested;
+
         public ItemIconGroup()
         {
         }
 
         protected override void OnChildAdded(ChildChangedEventArgs e)
         {
-            _items.Add(e.ChangedChild as ItemIcon);
-            if (!_pauseLayout)
+            var itemIcon = e.ChangedChild as ItemIcon;
+            if (itemIcon != null)
             {
-                FixSize();
+                _items.Add(itemIcon);
+                itemIcon.DeleteRequested += ItemIcon_DeleteRequested;
+                if (!_pauseLayout)
+                {
+                    FixSize();
+                }
             }
+
             base.OnChildAdded(e);
         }
 
         protected override void OnChildRemoved(ChildChangedEventArgs e)
         {
-            _items.Remove(e.ChangedChild as ItemIcon);
-            if (!_pauseLayout)
+            var itemIcon = e.ChangedChild as ItemIcon;
+            if (itemIcon != null)
             {
-                FixSize();
+                _items.Remove(itemIcon);
+                itemIcon.DeleteRequested -= ItemIcon_DeleteRequested;
+                if (!_pauseLayout)
+                {
+                    FixSize();
+                }
             }
             base.OnChildRemoved(e);
+        }
+
+        private void ItemIcon_DeleteRequested(object sender, EventArgs e)
+        {
+            var itemIcon = sender as ItemIcon;
+            var senderItemInfo = _groupInfo.Items.Where(itemInfo => itemInfo == itemIcon.Item).FirstOrDefault();
+            if (senderItemInfo != null)
+            {
+                this.RemoveChild(itemIcon);
+                _groupInfo.Items.Remove(senderItemInfo);
+            }
         }
 
         public void FixSize()
@@ -345,6 +369,18 @@ namespace QuickItem
         private void OnPositionChanged()
         {
             PositionChanged?.Invoke(this, null);
+        }
+
+        public IEnumerable<ContextMenuStripItem> GetContextMenuItems()
+        {
+            ContextMenuStripItem deleteGroup = new ContextMenuStripItem(Strings.ContextMenu_Group_Delete);
+            deleteGroup.Click += DeleteGroup_Click;
+            yield return deleteGroup;
+        }
+
+        private void DeleteGroup_Click(object sender, MouseEventArgs e)
+        {
+            DeleteRequested?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void DisposeControl()

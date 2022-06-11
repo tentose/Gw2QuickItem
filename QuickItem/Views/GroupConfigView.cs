@@ -88,13 +88,14 @@ namespace QuickItem
             };
             addToLayoutButton.Click += AddToLayoutButton_Click;
 
-            var dragInstructionLabel = new Label()
+            var instructionLabel = new Label()
             {
                 Text = "Drag items in here to move items around within the group\n" +
                        "Shift + drag the group in here to move the group around in here\n" +
-                       "Right click to edit the item",
+                       "Right click to edit the item\n" +
+                       "Drag groups in the game (outside of this window) to move them around",
                 Parent = groupEditorContainer,
-                Location = new Point(200, 200),
+                Location = new Point(100, 180),
                 AutoSizeWidth = true,
                 AutoSizeHeight = true,
                 ZIndex = -100,

@@ -16,11 +16,15 @@ namespace QuickItem
     [Export(typeof(Module))]
     public class QuickItemModule : Module
     {
+        private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
+
         private const string OPERATING_DIRECTORY = "quickitems";
         private const string ITEM_ICON_DIRECTORY = "itemicons";
         private const string GROUPS_DIRECTORY = "groups";
         private const string LAYOUTS_DIRECTORY = "layouts";
         private const string NATIVE_DIRECTORY = "dlls";
+        private const string CACHE_DIRECTORY = "cache";
+        private const string STATIC_ITEMS_FILE_NAME = "all_items.json";
 
         private SettingsManager m_settingsManager => this.ModuleParameters.SettingsManager;
         public ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
@@ -32,6 +36,7 @@ namespace QuickItem
         public string GroupsDirectory { get; private set; }
         public string LayoutsDirectory { get; private set; }
         public string NativeDirectory { get; private set; }
+        public string CacheDirectory { get; private set; }
 
         public GroupCollection GroupCollection { get; private set; }
         public LayoutCollection LayoutCollection { get; private set; }
@@ -77,6 +82,9 @@ namespace QuickItem
             NativeDirectory = Path.Combine(_operatingDirectory, NATIVE_DIRECTORY);
             Directory.CreateDirectory(NativeDirectory);
 
+            CacheDirectory = Path.Combine(_operatingDirectory, CACHE_DIRECTORY);
+            Directory.CreateDirectory(CacheDirectory);
+
             GroupCollection = new GroupCollection();
             GroupCollection.InitializeFromDisk();
 
@@ -91,26 +99,15 @@ namespace QuickItem
 
             _window = new ManagementWindow();
 
-            var nativeDllPath = Path.Combine(NativeDirectory, "ItemFinder.dll");
-            if (!File.Exists(nativeDllPath))
-            {
-                using (var inStream = ContentsManager.GetFileStream(@"dll\ItemFinder.dll"))
-                {
-                    using (var outStream = File.OpenWrite(nativeDllPath))
-                    {
-                        inStream.CopyTo(outStream);
-                    }
-                }
-            }
+            EnsureFileCopiedFromArchive(@"dll\ItemFinder.dll", Path.Combine(NativeDirectory, "ItemFinder.dll"));
+            EnsureFileCopiedFromArchive(@"Textures\itemmask.png", Path.Combine(ItemIconDirectory, "itemmask.png"));
 
+            var localeDir = LocaleToPathString(GameService.Overlay.UserLocale.Value);
+            var localeSpecificCacheDirectory = Path.Combine(CacheDirectory, localeDir);
+            var staticItemsJsonPath = Path.Combine(localeSpecificCacheDirectory, STATIC_ITEMS_FILE_NAME);
 
-            using (var inStream = ContentsManager.GetFileStream(@"Textures\itemmask.png"))
-            {
-                using (var outStream = File.OpenWrite(Path.Combine(ItemIconDirectory, "itemmask.png")))
-                {
-                    inStream.CopyTo(outStream);
-                }
-            }
+            EnsureFileCopiedFromArchive(Path.Combine(localeDir, STATIC_ITEMS_FILE_NAME), staticItemsJsonPath);
+            await StaticItemInfo.Initialize(staticItemsJsonPath);
 
             //OpenCvSharp.Internal.WindowsLibraryLoader.Instance.AdditionalPaths.Add(NativeDirectory);
             ItemFinderNative.Instance.SetGw2Window(GameService.GameIntegration.Gw2Instance.Gw2WindowHandle);
@@ -123,9 +120,37 @@ namespace QuickItem
             _searchIcon.Click += _searchIcon_Click;
         }
 
+        private string LocaleToPathString(Gw2Sharp.WebApi.Locale locale)
+        {
+            switch (locale)
+            {
+                case Gw2Sharp.WebApi.Locale.English: return "en";
+                case Gw2Sharp.WebApi.Locale.French: return "fr";
+                case Gw2Sharp.WebApi.Locale.German: return "de";
+                case Gw2Sharp.WebApi.Locale.Spanish: return "es";
+                case Gw2Sharp.WebApi.Locale.Chinese: return "zh";
+                default: return "en";
+            }
+        }
+
         private void _searchIcon_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
         {
             _window.ToggleWindow();
+        }
+
+        private void EnsureFileCopiedFromArchive(string archivePath, string extractedPath)
+        {
+            if (!File.Exists(extractedPath))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(extractedPath));
+                using (var inStream = ContentsManager.GetFileStream(archivePath))
+                {
+                    using (var outStream = File.OpenWrite(extractedPath))
+                    {
+                        inStream.CopyTo(outStream);
+                    }
+                }
+            }
         }
 
         protected override void DefineSettings(SettingCollection settings)

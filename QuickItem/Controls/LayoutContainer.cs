@@ -74,6 +74,24 @@ namespace QuickItem
 
         private void ApplyLayout(LayoutInfo info)
         {
+            // Clear existing event registrations
+            foreach (var groupRef in _layoutInfo.Groups)
+            {
+                var groupInfo = _groups.FindGroupById(groupRef.GroupId);
+                if (groupInfo != null)
+                {
+                    groupInfo.PropertyChanged -= GroupInfo_PropertyChanged;
+                }
+            }
+            foreach (var child in this.Children)
+            {
+                var group = child as ItemIconGroup;
+                if (group != null)
+                {
+                    group.PositionChanged -= Group_PositionChanged;
+                    group.DeleteRequested -= Group_DeleteRequested;
+                }
+            }
             this.ClearChildren();
             ItemFinderNative.Instance.ClearItems();
 
@@ -92,11 +110,27 @@ namespace QuickItem
                     };
                     group.PositionChanged += Group_PositionChanged;
                     groupInfo.PropertyChanged += GroupInfo_PropertyChanged;
+                    group.DeleteRequested += Group_DeleteRequested;
 
                     foreach (var item in groupInfo.Items)
                     {
                         ItemFinderNative.Instance.AddItem(item.ItemAssetId);
                     }
+                }
+            }
+        }
+
+        private void Group_DeleteRequested(object sender, EventArgs e)
+        {
+            var group = sender as ItemIconGroup;
+            if (group != null)
+            {
+                var groupPositionInstance = _layoutInfo.Groups
+                                                .Where(groupPosition => groupPosition.GroupId == group.GroupInfo.Guid && groupPosition.Position == group.Location)
+                                                .FirstOrDefault();
+                if (groupPositionInstance != null)
+                {
+                    _layoutInfo.Groups.Remove(groupPositionInstance);
                 }
             }
         }

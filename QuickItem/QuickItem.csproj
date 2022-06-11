@@ -234,13 +234,17 @@
     <Reference Include="System.Xml.ReaderWriter" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\AutocompleteTextBox.cs" />
     <Compile Include="Controls\IconButton.cs" />
+    <Compile Include="Controls\ItemEditControl.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="IHasContextMenu.cs" />
     <Compile Include="ItemFinderNative.cs" />
     <Compile Include="Models\GroupCollection.cs" />
     <Compile Include="Presenters\LayoutConfigPresenter.cs" />
     <Compile Include="Presenters\GroupConfigPresenter.cs" />
+    <Compile Include="StaticItemInfo.cs" />
     <Compile Include="Views\LayoutConfigView.cs" />
     <Compile Include="Views\GroupConfigView.cs" />
     <Compile Include="INamedObject.cs" />
