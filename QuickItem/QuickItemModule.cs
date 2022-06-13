@@ -24,6 +24,7 @@ namespace QuickItem
         private const string LAYOUTS_DIRECTORY = "layouts";
         private const string NATIVE_DIRECTORY = "dlls";
         private const string CACHE_DIRECTORY = "cache";
+        private const string DEBUG_DIRECTORY = "debug";
         private const string STATIC_ITEMS_FILE_NAME = "all_items.json";
 
         private SettingsManager m_settingsManager => this.ModuleParameters.SettingsManager;
@@ -37,6 +38,7 @@ namespace QuickItem
         public string LayoutsDirectory { get; private set; }
         public string NativeDirectory { get; private set; }
         public string CacheDirectory { get; private set; }
+        public string DebugDirectory { get; private set; }
 
         public GroupCollection GroupCollection { get; private set; }
         public LayoutCollection LayoutCollection { get; private set; }
@@ -85,19 +87,8 @@ namespace QuickItem
             CacheDirectory = Path.Combine(_operatingDirectory, CACHE_DIRECTORY);
             Directory.CreateDirectory(CacheDirectory);
 
-            GroupCollection = new GroupCollection();
-            GroupCollection.InitializeFromDisk();
-
-            LayoutCollection = new LayoutCollection();
-            LayoutCollection.InitializeFromDisk();
-
-            LayoutContainer = new LayoutContainer(GroupCollection)
-            {
-                ActiveLayout = LayoutCollection[0],
-                Parent = GameService.Graphics.SpriteScreen,
-            };
-
-            _window = new ManagementWindow();
+            DebugDirectory = Path.Combine(_operatingDirectory, DEBUG_DIRECTORY);
+            Directory.CreateDirectory(DebugDirectory);
 
             EnsureFileCopiedFromArchive(@"dll\ItemFinder.dll", Path.Combine(NativeDirectory, "ItemFinder.dll"));
             EnsureFileCopiedFromArchive(@"Textures\itemmask.png", Path.Combine(ItemIconDirectory, "itemmask.png"));
@@ -108,6 +99,27 @@ namespace QuickItem
 
             EnsureFileCopiedFromArchive(Path.Combine(localeDir, STATIC_ITEMS_FILE_NAME), staticItemsJsonPath);
             await StaticItemInfo.Initialize(staticItemsJsonPath);
+
+            GroupCollection = new GroupCollection();
+            GroupCollection.InitializeFromDisk();
+
+            LayoutCollection = new LayoutCollection();
+            LayoutCollection.InitializeFromDisk();
+
+            string activeLayoutName = GlobalSettings.ActiveLayout.Value;
+            var activeLayout = LayoutCollection.Where(layout => layout.Name == activeLayoutName).FirstOrDefault();
+            if (activeLayout == null)
+            {
+                activeLayout = LayoutCollection[0];
+            }
+
+            LayoutContainer = new LayoutContainer(GroupCollection)
+            {
+                ActiveLayout = activeLayout,
+                Parent = GameService.Graphics.SpriteScreen,
+            };
+
+            _window = new ManagementWindow();
 
             //OpenCvSharp.Internal.WindowsLibraryLoader.Instance.AdditionalPaths.Add(NativeDirectory);
             ItemFinderNative.Instance.SetGw2Window(GameService.GameIntegration.Gw2Instance.Gw2WindowHandle);

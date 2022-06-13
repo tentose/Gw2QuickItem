@@ -51,18 +51,21 @@ namespace ItemsCVPlayground
 
             markers["normalcat"] = new Marker()
             {
-                Img = new Mat(@"Markers\normalcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                Img = ProcessMatColor(new Mat(@"Markers\normalcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear)),
                 Mask = new Mat(@"Markers\itemmask.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                MarkingType = MarkerTypes.Square,
             };
             markers["unitedcat"] = new Marker()
             {
-                Img = new Mat(@"Markers\unitedcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                Img = ProcessMatColor(new Mat(@"Markers\unitedcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear)),
                 Mask = new Mat(@"Markers\itemmask.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                MarkingType = MarkerTypes.TriangleDown,
             };
             markers["supcat"] = new Marker()
             {
-                Img = new Mat(@"Markers\supcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                Img = ProcessMatColor(new Mat(@"Markers\supcat.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear)),
                 Mask = new Mat(@"Markers\itemmask.png").Resize(new OpenCvSharp.Size(62, 62), 0, 0, InterpolationFlags.Linear).CvtColor(ColorConversionCodes.BGR2GRAY),
+                MarkingType = MarkerTypes.Diamond,
             };
 
             randomTemplate = new Marker()
@@ -71,14 +74,52 @@ namespace ItemsCVPlayground
             };
         }
 
+        private Mat ProcessMatColor(Mat input)
+        {
+            Mat conv = input.CvtColor(ColorConversionCodes.BGR2YCrCb);
+            var channels = conv.Split();
+            Mat sum2 = ((channels[1] / 16 * 16).ToMat() | (channels[2] / 16).ToMat()).ToMat().Xor((channels[0]));
+
+            //Mat conv = input.CvtColor(ColorConversionCodes.BGR2HSV);
+            //var channels = conv.Split();
+            //Mat sum2 = channels[0].Xor(channels[2]);
+
+            return sum2;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            Mat original = new Mat(@"Sample\Full2.png").CvtColor(ColorConversionCodes.BGR2GRAY);
+            Mat original = new Mat(@"Sample\Full6.png");//.CvtColor(ColorConversionCodes.BGR2GRAY);
+
+            Mat conv = original.CvtColor(ColorConversionCodes.BGR2HSV);
+            var channels = conv.Split();
+            int i = 0;
+            foreach (var channel in channels)
+            {
+                Cv2.ImShow("HSV-" + i, channel);
+                i++;
+            }
+            //Mat sum = channels[0] / 4 * 3 + channels[2] / 4;
+            //Cv2.ImShow("SumHSV", sum);
+
+            conv = original.CvtColor(ColorConversionCodes.BGR2HLS);
+            channels = conv.Split();
+            i = 0;
+            foreach (var channel in channels)
+            {
+                Cv2.ImShow("HLS-" + i, channel);
+                i++;
+            }
+            //Mat sum2 = ((channels[1] / 16 * 16).ToMat() | (channels[2] / 16).ToMat()).ToMat().Xor((channels[0]));
+            //Cv2.ImShow("Sum2", sum2);
+
             //CalculateDiffToRandomTemplate(original);
-            FindCornersThenLookInSmallRoiScaled(ref original);
-            Cv2.ImShow("debug", original);
+            var processed = ProcessMatColor(original);
+
+            FindCornersThenLookInSmallRoiScaled(ref processed);
+            Cv2.ImShow("debug", processed);
 
             var frameTime = stopwatch.ElapsedMilliseconds;
             timingLabel.Text = frameTime.ToString();
@@ -235,24 +276,31 @@ namespace ItemsCVPlayground
 
         private void FindCornersThenLookInSmallRoiScaled(ref Mat original)
         {
-            const float scale = 0.5f;
+            const float scale = 0.6f;
 
             original = original.Resize(OpenCvSharp.Size.Zero, scale, scale, InterpolationFlags.Linear);
             var markersScaled = markers.Select((pair) => (pair.Key, new Marker()
             {
                 Img = pair.Value.Img.Resize(OpenCvSharp.Size.Zero, scale, scale, InterpolationFlags.Linear),
                 Mask = pair.Value.Mask?.Resize(OpenCvSharp.Size.Zero, scale, scale, InterpolationFlags.Linear),
+                MarkingType = pair.Value.MarkingType,
             })).ToDictionary(pair => pair.Key, pair => pair.Item2);
 
             foreach (var marker in markersScaled)
             {
-                var position = LookForMarker(original, marker.Value, 0.1);
-
-                if (position.HasValue)
+                Mat debug = original.Clone();
+                Point? position;
+                int count = 0;
+                do
                 {
-                    original.DrawMarker(position.Value, Scalar.White, MarkerTypes.Square, 25, 2);
-                    Debug.WriteLine(marker.Key + ": " + position.Value);
-                }
+                    position = LookForMarker(debug, marker.Value, 0.1);
+
+                    if (position.HasValue)
+                    {
+                        debug.DrawMarker(position.Value + new Point(15, 15), Scalar.White, marker.Value.MarkingType, 20, 4);
+                        Debug.WriteLine(marker.Key + ": " + position.Value);
+                    }
+                } while (position.HasValue && count++ < 3);
             }
         }
 
@@ -374,8 +422,8 @@ namespace ItemsCVPlayground
             if (minVal < confidenceThreshold)
             {
                 markerPosition = minLoc;
-                Debug.WriteLine(minVal);
             }
+            Debug.WriteLine(minVal);
 
             return markerPosition;
         }
@@ -393,5 +441,7 @@ namespace ItemsCVPlayground
         public Mat Mask { get; set; }
 
         public MarkerSearchStrategy SearchStrategy { get; set; } = MarkerSearchStrategy.ToGray;
+
+        public MarkerTypes MarkingType { get; set; } = MarkerTypes.Square;
     }
 }

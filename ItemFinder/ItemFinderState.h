@@ -9,11 +9,12 @@ struct ItemFinderState
 
     void FindMarker();
 
-    ScreenCaptureWinRT m_capture;
-    HWND m_lastHwnd = nullptr;
-    MarkerFinder m_finder;
-    double m_scale = 0.6;
-    std::unique_ptr<MarkerFindSession> m_session;
+    ScreenCaptureWinRT capture;
+    HWND lastHwnd = nullptr;
+    MarkerFinder finder;
+    double scale = 0.6;
+    std::unique_ptr<MarkerFindSession> session;
+    std::wstring debugOutputDirectory;
 };
 
 }

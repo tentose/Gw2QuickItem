@@ -11,7 +11,7 @@ using namespace ItemFinder;
 
 ItemFinderState::ItemFinderState()
 {
-	m_finder.AddMarker(2056189, LR"(C:\ProgramData\Blish HUD\cache\assets\2\2056189.png)", LR"(D:\Repos\Gw2QuickItem\QuickItem\ref\Textures\itemmask.png)", SearchMode::ToGray);
+	finder.AddMarker(2056189, LR"(C:\ProgramData\Blish HUD\cache\assets\2\2056189.png)", LR"(D:\Repos\Gw2QuickItem\QuickItem\ref\Textures\itemmask.png)", SearchMode::ToGray);
 }
 
 void ItemFinderState::FindMarker()
@@ -19,26 +19,26 @@ void ItemFinderState::FindMarker()
 	Stopwatch watch;
 
 	auto targetHwnd = FindWindow(L"ArenaNet_Gr_Window_Class", NULL);
-	if (targetHwnd != m_lastHwnd)
+	if (targetHwnd != lastHwnd)
 	{
-		m_capture.SetWindow(targetHwnd);
-		m_lastHwnd = targetHwnd;
+		capture.SetWindow(targetHwnd);
+		lastHwnd = targetHwnd;
 	}
 
 	watch.PrintElapsed();
 
-	auto result = m_capture.CaptureFrame();
+	auto result = capture.CaptureFrame();
 
 	watch.PrintElapsed();
 
 	auto image = result->GetMat();
 
-	if (!m_session)
+	if (!session)
 	{
-		m_session = m_finder.CreateSessionForImage(image, 0.6);
+		session = finder.CreateSessionForImage(image, 0.6);
 	}
 	
-	auto point = m_session->FindMarker(2056189);
+	auto point = session->FindMarker(2056189);
 
 	watch.PrintElapsed();
 

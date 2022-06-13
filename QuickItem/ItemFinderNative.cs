@@ -28,20 +28,9 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
      * 
      */
 
-
-
     public class ItemFinderNative
     {
         private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
-
-        enum SearchMode
-        {
-            ToGray,
-            RedOnly,
-            BlueOnly,
-            GreenOnly,
-            Count,
-        }
 
         enum LogLevel
         {
@@ -89,13 +78,13 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
         private static extern void SetWindow(IntPtr hwnd);
 
         [DllImport("ItemFinder.dll", CharSet = CharSet.Unicode, PreserveSig = false, SetLastError = false, ExactSpelling = true)]
-        private static extern void AddMarker(uint id, string path, string maskPath, SearchMode mode);
+        private static extern void AddMarker(uint id, string path, string maskPath, IconSearchMode mode);
 
         [DllImport("ItemFinder.dll", CharSet = CharSet.Unicode, PreserveSig = false, SetLastError = false, ExactSpelling = true)]
         private static extern void RemoveMarker(uint id);
 
         [DllImport("ItemFinder.dll", CharSet = CharSet.Unicode, PreserveSig = false, SetLastError = false, ExactSpelling = true)]
-        private static extern void SetParameters(uint itemSize, double searchScale);
+        private static extern void SetParameters(uint itemSize, double searchScale, string debugOutputDir);
 
         [DllImport("ItemFinder.dll", CharSet = CharSet.Unicode, PreserveSig = false, SetLastError = false, ExactSpelling = true)]
         private static extern void InvalidateSession();
@@ -134,12 +123,18 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
 
             QuickItemModule.Instance.GlobalSettings.SearchAcceptThreshold.SettingChanged += SearchAcceptThreshold_SettingChanged;
             QuickItemModule.Instance.GlobalSettings.SearchImageScale.SettingChanged += SearchImageScale_SettingChanged;
+            QuickItemModule.Instance.GlobalSettings.OutputDebugImages.SettingChanged += OutputDebugImages_SettingChanged;
             GameService.Gw2Mumble.UI.UISizeChanged += UI_UISizeChanged;
 
             _itemSize = UiSizeToItemSize(GameService.Gw2Mumble.UI.UISize);
             _searchScale = QuickItemModule.Instance.GlobalSettings.SearchImageScale.Value;
             _searchThreshold = QuickItemModule.Instance.GlobalSettings.SearchAcceptThreshold.Value;
 
+            UpdateSettings();
+        }
+
+        private void OutputDebugImages_SettingChanged(object sender, ValueChangedEventArgs<bool> e)
+        {
             UpdateSettings();
         }
 
@@ -187,12 +182,12 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
             SetWindow(hwnd);
         }
 
-        public void AddItem(int assetId)
+        public void AddItem(int assetId, IconSearchMode searchMode)
         {
             uint uassetId = (uint)assetId;
             if (!_items.Contains(uassetId) && assetId != 0)
             {
-                AddMarker(uassetId, ContentService.Content.DatAssetCache.GetLocalTexturePath(assetId), Path.Combine(QuickItemModule.Instance.ItemIconDirectory, "itemmask.png"), SearchMode.ToGray);
+                AddMarker(uassetId, ContentService.Content.DatAssetCache.GetLocalTexturePath(assetId), Path.Combine(QuickItemModule.Instance.ItemIconDirectory, "itemmask.png"), searchMode);
                 _items.Add(uassetId);
             }
         }
@@ -217,7 +212,12 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
 
         public void UpdateSettings()
         {
-            SetParameters(_itemSize, _searchScale);
+            var debugPath = "";
+            if (QuickItemModule.Instance.GlobalSettings.OutputDebugImages.Value)
+            {
+                debugPath = QuickItemModule.Instance.DebugDirectory;
+            }
+            SetParameters(_itemSize, _searchScale, debugPath);
         }
 
         public Microsoft.Xna.Framework.Point? FindItem(int assetId)

@@ -1,5 +1,8 @@
 ﻿using Blish_HUD;
 using Blish_HUD.Controls;
+using Blish_HUD.Graphics.UI;
+using Blish_HUD.Settings;
+using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -34,16 +37,32 @@ namespace QuickItem.Controls
         private StandardButton _confirmButton;
         private StandardButton _cancelButton;
         private SearchResult _result;
+        private ItemIconInfo _itemInfo;
+        private FlowPanel _itemSettings;
+        private SettingEntry<IconSearchMode> _searchModeSetting;
 
         public event EventHandler<SearchResult> SearchCompleted;
 
-        public ItemEditControl()
+        public ItemEditControl(ItemIconInfo itemInfo)
         {
             if (CurrentInstance != null)
             {
                 CurrentInstance.Cancel();
             }
             CurrentInstance = this;
+
+            StaticItemInfo staticItemInfo = null;
+            _itemInfo = itemInfo;
+            if (_itemInfo.ItemId != 0)
+            {
+                StaticItemInfo.AllItems.TryGetValue(_itemInfo.ItemId, out staticItemInfo);
+                _result = new SearchResult()
+                {
+                    ItemId = _itemInfo.ItemId,
+                    AssetId = _itemInfo.ItemAssetId,
+                    ItemInfo = staticItemInfo,
+                };
+            }
 
             _searchTextBox = new AutocompleteTextBox()
             {
@@ -62,14 +81,58 @@ namespace QuickItem.Controls
                 Parent = this,
             };
 
+            if (_itemInfo.ItemAssetId != 0)
+            {
+                _itemImage.Texture = Content.DatAssetCache.GetTextureFromAssetId(_itemInfo.ItemAssetId);
+            }
+
             _itemName = new Label()
             {
                 Parent = this,
             };
 
+            if (staticItemInfo != null)
+            {
+                _itemName.Text = staticItemInfo.Name;
+            }
+            else
+            {
+                _itemName.Text = Strings.ItemEdit_DefaultNameLabel;
+            }
+
+            _itemSettings = new FlowPanel
+            {
+                CanScroll = true,
+                ControlPadding = new Vector2(0, 5),
+                FlowDirection = ControlFlowDirection.SingleTopToBottom,
+                //ShowBorder = true,
+                Parent = this,
+            };
+
+            var groupIconSize = IconSearchMode.ToGray;
+            if (staticItemInfo != null)
+            {
+                groupIconSize = staticItemInfo.SearchMode;
+            }
+            _searchModeSetting = SettingEntry<IconSearchMode>.InitSetting(groupIconSize);
+            _searchModeSetting.GetDisplayNameFunc = () => Strings.Settings_SearchMode_Name;
+            _searchModeSetting.GetDescriptionFunc = () => Strings.Settings_SearchMode_Description;
+            _searchModeSetting.SettingChanged += _searchModeSetting_SettingChanged;
+            IView settingView;
+            if ((settingView = SettingView.FromType(_searchModeSetting, 150)) != null)
+            {
+                var settingContainer = new ViewContainer()
+                {
+                    WidthSizingMode = SizingMode.Fill,
+                    HeightSizingMode = SizingMode.AutoSize,
+                    Parent = _itemSettings,
+                };
+                settingContainer.Show(settingView);
+            }
+
             _confirmButton = new StandardButton()
             {
-                Text = "Confirm",
+                Text = Strings.Button_Confirm,
                 Enabled = false,
                 Parent = this,
             };
@@ -77,12 +140,12 @@ namespace QuickItem.Controls
 
             _cancelButton = new StandardButton()
             {
-                Text = "Cancel",
+                Text = Strings.Button_Cancel,
                 Parent = this,
             };
             _cancelButton.Click += _cancelButton_Click;
 
-            this.Width = 300;
+            this.Width = 450;
             this.Height = 150;
             this.Parent = Graphics.SpriteScreen;
             this.Location = new Point(this.Parent.Width / 2 - this.Width / 2, this.Parent.Height / 2 - this.Height / 2);
@@ -92,6 +155,11 @@ namespace QuickItem.Controls
             this.ContentRegion = contentRegion;
 
             LayoutControls();
+        }
+
+        private void _searchModeSetting_SettingChanged(object sender, ValueChangedEventArgs<IconSearchMode> e)
+        {
+            _confirmButton.Enabled = true;
         }
 
         private void _searchTextBox_InputFocusChanged(object sender, ValueEventArgs<bool> e)
@@ -112,12 +180,22 @@ namespace QuickItem.Controls
 
         private void _confirmButton_Click(object sender, Blish_HUD.Input.MouseEventArgs e)
         {
+            if (_result != null)
+            {
+                _itemInfo.UpdateItem(_result.ItemId, _result.AssetId);
+                if (_result.ItemInfo.SearchMode != _searchModeSetting.Value)
+                {
+                    _result.ItemInfo.SearchMode = _searchModeSetting.Value;
+                    StaticItemInfo.WriteAllToFile();
+                }
+            }
             SearchCompleted?.Invoke(this, _result);
             this.Hide();
             if (CurrentInstance == this)
             {
                 CurrentInstance = null;
             }
+            this.Dispose();
         }
 
         public void Cancel()
@@ -128,6 +206,7 @@ namespace QuickItem.Controls
             {
                 CurrentInstance = null;
             }
+            this.Dispose();
         }
 
         private IEnumerable<object> SearchForItems(string term)
@@ -156,7 +235,7 @@ namespace QuickItem.Controls
             {
                 _result = selectedItem;
                 _result.AssetId = GetAssetIdFromUrl(_result.ItemInfo.IconUrl);
-                _itemImage.Texture = ContentService.Content.DatAssetCache.GetTextureFromAssetId(_result.AssetId);
+                _itemImage.Texture = Content.DatAssetCache.GetTextureFromAssetId(_result.AssetId);
                 _itemName.Text = _result.ItemInfo.Name;
                 _confirmButton.Enabled = true;
             }
@@ -201,6 +280,10 @@ namespace QuickItem.Controls
             _itemName.Height = 20;
             _itemName.Location = new Point(_itemImage.Right + 10, _searchTextBox.Bottom + 10);
 
+            _itemSettings.Width = _itemName.Width;
+            _itemSettings.Height = 100;
+            _itemSettings.Location = new Point(_itemName.Left, _itemName.Bottom + 10);
+
             _cancelButton.Location = new Point(region.Width - _cancelButton.Width, region.Height - _cancelButton.Height);
 
             _confirmButton.Location = new Point(_cancelButton.Left - 10 - _confirmButton.Width, region.Height - _cancelButton.Height);
@@ -214,6 +297,12 @@ namespace QuickItem.Controls
                        ContentService.Textures.Pixel,
                        bounds,
                        new Color(20, 20, 20, 200));
+        }
+
+        protected override void DisposeControl()
+        {
+            _searchTextBox.Dispose();
+            base.DisposeControl();
         }
     }
 }

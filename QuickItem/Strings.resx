@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Button_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
   <data name="ContextMenu_Group_Delete" xml:space="preserve">
     <value>Delete this group</value>
   </data>
@@ -135,11 +141,20 @@
   <data name="ItemContextMenu_SetItem" xml:space="preserve">
     <value>Set Item</value>
   </data>
+  <data name="ItemEdit_DefaultNameLabel" xml:space="preserve">
+    <value>Enter item name to search</value>
+  </data>
   <data name="Settings_ActiveLayout_Description" xml:space="preserve">
     <value>Name of the active layout. </value>
   </data>
   <data name="Settings_ActiveLayout_Name" xml:space="preserve">
     <value>Active Layout</value>
+  </data>
+  <data name="Settings_OutputDebugImages_Description" xml:space="preserve">
+    <value>If enabled, debug images will be written to the "debug" folder under this module's "quickitems" folder (accessed from the gears menu on the module settings page).</value>
+  </data>
+  <data name="Settings_OutputDebugImages_Name" xml:space="preserve">
+    <value>Output debug images</value>
   </data>
   <data name="Settings_SearchAcceptThreshold_Description" xml:space="preserve">
     <value>Threshold for when an item is considered found when searching. Smaller values will have fewer false positives, but may reject valid items. Larger values will be more tolerant, but may introduce false positives.
@@ -158,6 +173,14 @@ Max: 1.0</value>
   </data>
   <data name="Settings_SearchImageScale_Name" xml:space="preserve">
     <value>Search image scale</value>
+  </data>
+  <data name="Settings_SearchMode_Description" xml:space="preserve">
+    <value>When searching for the item on screen, everything is converted to grayscale to improve performance. This setting changes how the item is converted to grayscale.
+ToGray: Default. Images are converted to grayscale based on how bright the image is. Works for most items as long as they have unique illustrations.
+RedOnly, GreenOnly, BlueOnly: Sometimes, images only differ in colours (for example, Guild Siege Blueprints vs. Normal Siege Blueprints are the same other than one is yellow, the other one is blue). In these cases, ToGray may find the wrong item. Use one of these search modes to separate the items.</value>
+  </data>
+  <data name="Settings_SearchMode_Name" xml:space="preserve">
+    <value>Search mode</value>
   </data>
   <data name="Settings_VisibilityHotkey_Description" xml:space="preserve">
     <value>Hotkey to toggle visibility of all items</value>

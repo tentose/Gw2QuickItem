@@ -21,6 +21,7 @@ namespace QuickItem
                 _layoutInfo.PropertyChanged += _layoutInfo_PropertyChanged;
 
                 ApplyLayout(_layoutInfo);
+                QuickItemModule.Instance.GlobalSettings.ActiveLayout.Value = _layoutInfo.Name;
             }
         }
 
@@ -114,7 +115,12 @@ namespace QuickItem
 
                     foreach (var item in groupInfo.Items)
                     {
-                        ItemFinderNative.Instance.AddItem(item.ItemAssetId);
+                        var searchMode = IconSearchMode.ToGray;
+                        if (StaticItemInfo.AllItems.TryGetValue(item.ItemId, out StaticItemInfo value))
+                        {
+                            searchMode = value.SearchMode;
+                        }
+                        ItemFinderNative.Instance.AddItem(item.ItemAssetId, searchMode);
                     }
                 }
             }

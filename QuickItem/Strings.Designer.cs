@@ -61,6 +61,24 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Button_Cancel {
+            get {
+                return ResourceManager.GetString("Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        internal static string Button_Confirm {
+            get {
+                return ResourceManager.GetString("Button_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete this group.
         /// </summary>
         internal static string ContextMenu_Group_Delete {
@@ -115,6 +133,15 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter item name to search.
+        /// </summary>
+        internal static string ItemEdit_DefaultNameLabel {
+            get {
+                return ResourceManager.GetString("ItemEdit_DefaultNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the active layout. .
         /// </summary>
         internal static string Settings_ActiveLayout_Description {
@@ -129,6 +156,24 @@ namespace QuickItem {
         internal static string Settings_ActiveLayout_Name {
             get {
                 return ResourceManager.GetString("Settings_ActiveLayout_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If enabled, debug images will be written to the &quot;debug&quot; folder under this module&apos;s &quot;quickitems&quot; folder (accessed from the gears menu on the module settings page)..
+        /// </summary>
+        internal static string Settings_OutputDebugImages_Description {
+            get {
+                return ResourceManager.GetString("Settings_OutputDebugImages_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output debug images.
+        /// </summary>
+        internal static string Settings_OutputDebugImages_Name {
+            get {
+                return ResourceManager.GetString("Settings_OutputDebugImages_Name", resourceCulture);
             }
         }
         
@@ -171,6 +216,26 @@ namespace QuickItem {
         internal static string Settings_SearchImageScale_Name {
             get {
                 return ResourceManager.GetString("Settings_SearchImageScale_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When searching for the item on screen, everything is converted to grayscale to improve performance. This setting changes how the item is converted to grayscale.
+        ///ToGray: Default. Images are converted to grayscale based on how bright the image is. Works for most items as long as they have unique illustrations.
+        ///RedOnly, GreenOnly, BlueOnly: Sometimes, images only differ in colours (for example, Guild Siege Blueprints vs. Normal Siege Blueprints are the same other than one is yellow, the other one is blue). I [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Settings_SearchMode_Description {
+            get {
+                return ResourceManager.GetString("Settings_SearchMode_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search mode.
+        /// </summary>
+        internal static string Settings_SearchMode_Name {
+            get {
+                return ResourceManager.GetString("Settings_SearchMode_Name", resourceCulture);
             }
         }
         

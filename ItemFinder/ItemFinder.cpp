@@ -28,51 +28,52 @@ ITEMFINDER_API HRESULT InitializeItemFinder(LogCallback logCallback) try
 
 ITEMFINDER_API HRESULT SetWindow(HWND hwndGame) try
 {
-    s_state->m_capture.SetWindow(hwndGame);
+    s_state->capture.SetWindow(hwndGame);
 
     return S_OK;
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
 ITEMFINDER_API HRESULT AddMarker(uint32_t id, PCWSTR path, PCWSTR maskPath, SearchMode mode) try
 {
-    s_state->m_finder.AddMarker(id, path, maskPath, mode);
+    s_state->finder.AddMarker(id, path, maskPath, mode);
 
     return S_OK;
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
 ITEMFINDER_API HRESULT RemoveMarker(uint32_t id) try
 {
-    s_state->m_finder.RemoveMarker(id);
+    s_state->finder.RemoveMarker(id);
 
     return S_OK;
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
-ITEMFINDER_API HRESULT SetParameters(uint32_t itemSize, double searchScale) try
+ITEMFINDER_API HRESULT SetParameters(uint32_t itemSize, double searchScale, PCWSTR debugOutputDirectory) try
 {
-    s_state->m_finder.SetMarkerSize(itemSize);
-    s_state->m_scale = searchScale;
+    s_state->finder.SetMarkerSize(itemSize);
+    s_state->scale = searchScale;
+    s_state->debugOutputDirectory = debugOutputDirectory;
 
     return InvalidateSession();
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
 ITEMFINDER_API HRESULT InvalidateSession() try
 {
-    s_state->m_session = nullptr;
+    s_state->session = nullptr;
 
     return S_OK;
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
 ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPosition) try
 {
-    auto result = s_state->m_capture.CaptureFrame();
+    auto result = s_state->capture.CaptureFrame();
     auto image = result->GetMat();
 
-    if (!s_state->m_session)
+    if (!s_state->session)
     {
-        s_state->m_session = s_state->m_finder.CreateSessionForImage(image, s_state->m_scale);
+        s_state->session = s_state->finder.CreateSessionForImage(image, s_state->scale, s_state->debugOutputDirectory);
     }
 
-    auto point = s_state->m_session->FindMarker(id, threshold);
+    auto point = s_state->session->FindMarker(id, threshold);
     *markerPosition = point;
 
     return S_OK;

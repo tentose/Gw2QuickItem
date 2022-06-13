@@ -146,14 +146,6 @@ namespace QuickItem
             m_contextMenu.Show(this);
         }
 
-        private void ItemSearch_SearchCompleted(object sender, ItemEditControl.SearchResult e)
-        {
-            if (e != null)
-            {
-                this.Item.UpdateItem(e.ItemId, e.AssetId);
-            }
-        }
-
         protected override void OnClick(MouseEventArgs e)
         {
             base.OnClick(e);
@@ -209,8 +201,7 @@ namespace QuickItem
 
         private void EditItem_Click(object sender, MouseEventArgs e)
         {
-            ItemEditControl itemSearch = new ItemEditControl();
-            itemSearch.SearchCompleted += ItemSearch_SearchCompleted;
+            ItemEditControl itemSearch = new ItemEditControl(this.Item);
         }
 
         protected override void Paint(SpriteBatch spriteBatch, Rectangle bounds)

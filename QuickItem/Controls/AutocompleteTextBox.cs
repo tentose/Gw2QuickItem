@@ -139,5 +139,11 @@ namespace QuickItem.Controls
                 _searchDebounceTimer.Start();
             }
         }
+
+        protected override void DisposeControl()
+        {
+            _resultsPanel.Dispose();
+            base.DisposeControl();
+        }
     }
 }
