@@ -39,7 +39,7 @@ class MarkerFindSession
 public:
 	MarkerFindSession(std::map<uint32_t, Marker> markers, cv::Mat image, double scale, std::wstring const& debugOutputDir = L"");
 
-	Point FindMarker(uint32_t id, double threshold = 0.01);
+	Point FindMarker(uint32_t id, double threshold = 0.01, int hueThreshold = 4);
 
 private:
 	void WriteDebugImage(cv::Mat image);

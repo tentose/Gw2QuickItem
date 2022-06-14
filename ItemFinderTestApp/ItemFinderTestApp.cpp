@@ -112,7 +112,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    InitializeItemFinder(nullptr);
    AddMarker(2056189, LR"(C:\ProgramData\Blish HUD\cache\assets\2\2056189.png)", LR"(D:\Repos\Gw2QuickItem\QuickItem\ref\Textures\itemmask.png)", SearchMode::ToGray);
-   SetParameters(62, 0.6);
+   SetParameters(62, 0.6, L"");
 
 
    return TRUE;
@@ -179,7 +179,7 @@ void DoFinder()
     }
 
     Point point;
-    FindMarker(2056189, 0.1, &point);
+    FindMarker(2056189, 0.1, 4, &point);
 
     std::wstring output = L"Found at " + std::to_wstring(point.X) + L", " + std::to_wstring(point.Y) + L"\n";
     OutputDebugString(output.c_str());

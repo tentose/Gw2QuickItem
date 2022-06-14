@@ -37,6 +37,7 @@ namespace QuickItem
                     var group = child as ItemIconGroup;
                     group.AllowActivation = !_allowEdit;
                     group.DragMode = _allowEdit ? GroupDragMode.Group : GroupDragMode.None;
+                    group.AllowEdit = _allowEdit;
                 }
             }
         }
@@ -106,6 +107,7 @@ namespace QuickItem
                         GroupInfo = groupInfo,
                         Location = groupRef.Position,
                         AllowActivation = !_allowEdit,
+                        AllowEdit = _allowEdit,
                         DragMode = _allowEdit ? GroupDragMode.Group : GroupDragMode.None,
                         Parent = this,
                     };

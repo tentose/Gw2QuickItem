@@ -66,6 +66,6 @@ ITEMFINDER_API HRESULT RemoveMarker(uint32_t id);
 
 ITEMFINDER_API HRESULT SetParameters(uint32_t itemSize, double searchScale, PCWSTR debugOutputDirectory);
 ITEMFINDER_API HRESULT InvalidateSession();
-ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPosition);
+ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, uint32_t hueThreshold, Point* markerPosition);
 
 }

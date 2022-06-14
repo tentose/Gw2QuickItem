@@ -125,6 +125,7 @@ namespace QuickItem
                 GroupInfo = Model,
                 Parent = this.View.GroupEditor,
                 AllowActivation = false,
+                AllowEdit = true,
                 DragMode = GroupDragMode.Item,
                 Location = new Point(50, 50),
             };

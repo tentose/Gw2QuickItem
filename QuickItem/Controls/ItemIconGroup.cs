@@ -46,6 +46,23 @@ namespace QuickItem
             }
         }
 
+        private bool _allowEdit = false;
+        public bool AllowEdit
+        {
+            get
+            {
+                return _allowEdit;
+            }
+            set
+            {
+                _allowEdit = value;
+                foreach (var item in _items)
+                {
+                    item.AllowEdit = value;
+                }
+            }
+        }
+
         public GroupDragMode DragMode { get; set; } = GroupDragMode.None;
 
         private bool _pauseLayout = false;
@@ -373,9 +390,12 @@ namespace QuickItem
 
         public IEnumerable<ContextMenuStripItem> GetContextMenuItems()
         {
-            ContextMenuStripItem deleteGroup = new ContextMenuStripItem(Strings.ContextMenu_Group_Delete);
-            deleteGroup.Click += DeleteGroup_Click;
-            yield return deleteGroup;
+            if (AllowEdit)
+            {
+                ContextMenuStripItem deleteGroup = new ContextMenuStripItem(Strings.ContextMenu_Group_Delete);
+                deleteGroup.Click += DeleteGroup_Click;
+                yield return deleteGroup;
+            }
         }
 
         private void DeleteGroup_Click(object sender, MouseEventArgs e)

@@ -130,13 +130,13 @@ namespace QuickItem
             }
             this.Model.CollectionChanged += Model_CollectionChanged;
 
-            // Select the first child after a slight delay. Work around issue where sizing is inconsistent
-            // if selecting immediately
-            Task.Run(async () =>
-            {
-                await Task.Delay(200);
-                this.View.ItemsList.Select(firstChild);
-            });
+            //// Select the first child after a slight delay. Work around issue where sizing is inconsistent
+            //// if selecting immediately
+            //Task.Run(async () =>
+            //{
+            //    await Task.Delay(200);
+            //    this.View.ItemsList.Select(firstChild);
+            //});
         }
     }
 }

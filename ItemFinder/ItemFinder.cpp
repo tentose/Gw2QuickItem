@@ -63,7 +63,7 @@ ITEMFINDER_API HRESULT InvalidateSession() try
     return S_OK;
 } CATCH_LOG_RETURN_HR(E_FAIL)
 
-ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPosition) try
+ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, uint32_t hueThreshold, Point* markerPosition) try
 {
     auto result = s_state->capture.CaptureFrame();
     auto image = result->GetMat();
@@ -73,7 +73,7 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
         s_state->session = s_state->finder.CreateSessionForImage(image, s_state->scale, s_state->debugOutputDirectory);
     }
 
-    auto point = s_state->session->FindMarker(id, threshold);
+    auto point = s_state->session->FindMarker(id, threshold, hueThreshold);
     *markerPosition = point;
 
     return S_OK;

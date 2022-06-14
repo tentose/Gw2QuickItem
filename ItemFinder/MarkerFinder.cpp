@@ -62,7 +62,7 @@ MarkerFindSession::MarkerFindSession(std::map<uint32_t, Marker> markers, cv::Mat
 	cv::resize(m_originalImage, m_originalScaledImage, cv::Size(), m_scale, m_scale, cv::INTER_LINEAR);
 }
 
-Point MarkerFindSession::FindMarker(uint32_t id, double threshold)
+Point MarkerFindSession::FindMarker(uint32_t id, double threshold, int hueThreshold)
 {
 	Marker const& marker = m_markers[id];
 
@@ -103,15 +103,16 @@ Point MarkerFindSession::FindMarker(uint32_t id, double threshold)
 	{
 		cv::minMaxLoc(searchResult, &minVal, &maxVal, &minLoc, &maxLoc);
 		
-		if (minVal < threshold)
+		if (minVal > threshold)
 		{
-			if (GetMeanHueDifference(marker, minLoc) < 4)
-			{
-				// passed hue check, set result and break;
-				markerPosition = Point(minLoc.x, minLoc.y);
-				break;
-			}
-			else
+			// no results below threshold, break;
+			break;
+		}
+
+		if (marker.Mode == SearchMode::ToGrayWithMeanHueCheck)
+		{
+			// mode requires a hue check
+			if (GetMeanHueDifference(marker, minLoc) > hueThreshold)
 			{
 				// failed hue check, blank out the location and try again
 				cv::rectangle(searchResult, minLoc, cv::Point(minLoc.x + marker.Image.cols, minLoc.y + marker.Image.rows), cv::Scalar(100), -1);
@@ -120,13 +121,13 @@ Point MarkerFindSession::FindMarker(uint32_t id, double threshold)
 				{
 					cv::drawMarker(debugOutput, minLoc, cv::Scalar(0, 0, 0), cv::MARKER_TILTED_CROSS, 20, 2);
 				}
+				continue;
 			}
 		}
-		else
-		{
-			// no results above threshold, break;
-			break;
-		}
+
+		// all checks passed. set result and break;
+		markerPosition = Point(minLoc.x, minLoc.y);
+		break;
 	}
 
 	if (!m_debugOutputDirectory.empty() && s_LogString != nullptr)

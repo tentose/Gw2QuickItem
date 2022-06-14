@@ -124,6 +124,40 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        internal static string CornerIcon_Loading {
+            get {
+                return ResourceManager.GetString("CornerIcon_Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick items.
+        /// </summary>
+        internal static string CornerIcon_Name {
+            get {
+                return ResourceManager.GetString("CornerIcon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick items lets you put shortcuts to your inventory items anywhere on your screen.
+        ///It does this by opening your inventory, looking (without scrolling) in your inventory, finding the item, and double clicking the item.
+        ///
+        ///Quick items involves 3 parts:
+        ///    1. Items. Each item corresponds to an item in your inventory.
+        ///    2. Groups. Made up of several items together. Allow easy movement of related items together. 
+        ///        Ex: group together your food and utility items together.
+        ///    3. Layouts. Made up of [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InfoTab_Text {
+            get {
+                return ResourceManager.GetString("InfoTab_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Item.
         /// </summary>
         internal static string ItemContextMenu_SetItem {
@@ -142,6 +176,15 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find the item.
+        /// </summary>
+        internal static string Notification_CantFindItem {
+            get {
+                return ResourceManager.GetString("Notification_CantFindItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the active layout. .
         /// </summary>
         internal static string Settings_ActiveLayout_Description {
@@ -156,6 +199,24 @@ namespace QuickItem {
         internal static string Settings_ActiveLayout_Name {
             get {
                 return ResourceManager.GetString("Settings_ActiveLayout_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set this to the same keybind that you use in GW2. Default: i.
+        /// </summary>
+        internal static string Settings_InventoryKeybind_Description {
+            get {
+                return ResourceManager.GetString("Settings_InventoryKeybind_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inventory keybind.
+        /// </summary>
+        internal static string Settings_InventoryKeybind_Name {
+            get {
+                return ResourceManager.GetString("Settings_InventoryKeybind_Name", resourceCulture);
             }
         }
         
@@ -179,9 +240,9 @@ namespace QuickItem {
         
         /// <summary>
         ///   Looks up a localized string similar to Threshold for when an item is considered found when searching. Smaller values will have fewer false positives, but may reject valid items. Larger values will be more tolerant, but may introduce false positives.
-        ///Min: 0.05
-        ///Default: 0.1
-        ///Max: 0.5.
+        ///Min: 0.01
+        ///Default: 0.10
+        ///Max: 0.20.
         /// </summary>
         internal static string Settings_SearchAcceptThreshold_Description {
             get {
@@ -199,10 +260,10 @@ namespace QuickItem {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scale down the image when searching to improve search performance. Smaller values may make the search inaccurate (fail to find the item or finds the wrong item). Larger values will make the search slower.
-        ///Min: 0.5
-        ///Default: 0.6
-        ///Max: 1.0.
+        ///   Looks up a localized string similar to Scale (as a %) down the image when searching to improve search performance. Smaller values may make the search inaccurate (fail to find the item or finds the wrong item). Larger values will make the search slower.
+        ///Min: 0.30
+        ///Default: 0.50
+        ///Max: 1.00.
         /// </summary>
         internal static string Settings_SearchImageScale_Description {
             get {
@@ -221,8 +282,8 @@ namespace QuickItem {
         
         /// <summary>
         ///   Looks up a localized string similar to When searching for the item on screen, everything is converted to grayscale to improve performance. This setting changes how the item is converted to grayscale.
-        ///ToGray: Default. Images are converted to grayscale based on how bright the image is. Works for most items as long as they have unique illustrations.
-        ///RedOnly, GreenOnly, BlueOnly: Sometimes, images only differ in colours (for example, Guild Siege Blueprints vs. Normal Siege Blueprints are the same other than one is yellow, the other one is blue). I [rest of string was truncated]&quot;;.
+        ///- ToGray: Default. Images are converted to grayscale based on how bright the image is. Works for most items as long as they have unique illustrations.
+        ///- ToGrayWithMeanHueCheck: Same as ToGray, but the result is further checked to make sure that its average hue matches the target item. Use this mode for items that have multiple other similar items  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Settings_SearchMode_Description {
             get {
@@ -240,20 +301,68 @@ namespace QuickItem {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hotkey to toggle visibility of all items.
+        ///   Looks up a localized string similar to Time to wait for inventory to open before attempting to click on the item. Leave as default unless your inventory opens particularly slow.
+        ///Min: 100ms
+        ///Default: 300ms
+        ///Max: 1000ms.
         /// </summary>
-        internal static string Settings_VisibilityHotkey_Description {
+        internal static string Settings_WaitForInventoryOpen_Description {
             get {
-                return ResourceManager.GetString("Settings_VisibilityHotkey_Description", resourceCulture);
+                return ResourceManager.GetString("Settings_WaitForInventoryOpen_Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visibility Toggle.
+        ///   Looks up a localized string similar to Wait for inventory open.
         /// </summary>
-        internal static string Settings_VisibilityHotkey_Name {
+        internal static string Settings_WaitForInventoryOpen_Name {
             get {
-                return ResourceManager.GetString("Settings_VisibilityHotkey_Name", resourceCulture);
+                return ResourceManager.GetString("Settings_WaitForInventoryOpen_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        internal static string SettingsWindow_GroupsTabName {
+            get {
+                return ResourceManager.GetString("SettingsWindow_GroupsTabName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        internal static string SettingsWindow_InfoTabName {
+            get {
+                return ResourceManager.GetString("SettingsWindow_InfoTabName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layouts.
+        /// </summary>
+        internal static string SettingsWindow_LayoutsTabName {
+            get {
+                return ResourceManager.GetString("SettingsWindow_LayoutsTabName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string SettingsWindow_SettingsTabName {
+            get {
+                return ResourceManager.GetString("SettingsWindow_SettingsTabName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick items settings.
+        /// </summary>
+        internal static string SettingsWindow_Title {
+            get {
+                return ResourceManager.GetString("SettingsWindow_Title", resourceCulture);
             }
         }
     }

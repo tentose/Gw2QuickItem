@@ -45,6 +45,8 @@ namespace QuickItem
         
         public LayoutContainer LayoutContainer { get; private set; }
 
+        public ItemClicker Clicker { get; private set; }
+
         private string _operatingDirectory;
         private Gw2Sharp.Gw2Client _gw2sharpClientForRender;
         private CornerIcon _searchIcon;
@@ -64,10 +66,10 @@ namespace QuickItem
 
             _searchIcon = new CornerIcon()
             {
-                IconName = "Something",
+                IconName = Strings.CornerIcon_Name,
                 Icon = ContentsManager.GetTexture(@"Textures\CornerIcon.png"),
                 HoverIcon = ContentsManager.GetTexture(@"Textures\CornerIconHover.png"),
-                LoadingMessage = "maybe",
+                LoadingMessage = Strings.CornerIcon_Loading,
             };
 
             _operatingDirectory = DirectoriesManager.GetFullDirectoryPath(OPERATING_DIRECTORY);
@@ -119,6 +121,8 @@ namespace QuickItem
                 Parent = GameService.Graphics.SpriteScreen,
             };
 
+            Clicker = new ItemClicker();
+
             _window = new ManagementWindow();
 
             //OpenCvSharp.Internal.WindowsLibraryLoader.Instance.AdditionalPaths.Add(NativeDirectory);
@@ -130,6 +134,7 @@ namespace QuickItem
             RenderClient = _gw2sharpClientForRender.WebApi.Render;
 
             _searchIcon.Click += _searchIcon_Click;
+            _searchIcon.LoadingMessage = null;
         }
 
         private string LocaleToPathString(Gw2Sharp.WebApi.Locale locale)

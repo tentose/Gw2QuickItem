@@ -66,7 +66,7 @@ namespace QuickItem.Controls
 
             _searchTextBox = new AutocompleteTextBox()
             {
-                PlaceholderText = "Search for item...",
+                PlaceholderText = Strings.ItemEdit_DefaultNameLabel,
                 Parent = this,
             };
             _searchTextBox.SelectedItemChanged += _searchTextBox_SelectedItemChanged;

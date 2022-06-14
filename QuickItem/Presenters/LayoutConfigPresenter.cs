@@ -31,7 +31,7 @@ namespace QuickItem
             var keybindSetting = SettingEntry<KeyBinding>.InitSetting(Model.KeyBind);
             keybindSetting.GetDisplayNameFunc = () => "Keybind";
             keybindSetting.GetDescriptionFunc = () => "Keybind to activate this layout";
-            LayoutSettings.Add(keybindSetting);
+            //LayoutSettings.Add(keybindSetting);
             // Keybinding SettingEntry doesn't fire SettingChanged events. Watch the view's event as a workaround
             //keybindSetting.SettingChanged += KeybindSetting_SettingChanged;
 

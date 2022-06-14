@@ -90,7 +90,7 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
         private static extern void InvalidateSession();
 
         [DllImport("ItemFinder.dll", CharSet = CharSet.Unicode, PreserveSig = false, SetLastError = false, ExactSpelling = true)]
-        private static extern void FindMarker(uint id, double threshold, out Point markerPosition);
+        private static extern void FindMarker(uint id, double threshold, int hueThreshold, out Point markerPosition);
 
         private static ItemFinderNative _instance = null;
         public static ItemFinderNative Instance
@@ -166,13 +166,13 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
             UpdateSettings();
         }
 
-        private void SearchImageScale_SettingChanged(object sender, ValueChangedEventArgs<double> e)
+        private void SearchImageScale_SettingChanged(object sender, ValueChangedEventArgs<float> e)
         {
             _searchScale = e.NewValue;
             UpdateSettings();
         }
 
-        private void SearchAcceptThreshold_SettingChanged(object sender, ValueChangedEventArgs<double> e)
+        private void SearchAcceptThreshold_SettingChanged(object sender, ValueChangedEventArgs<float> e)
         {
             _searchThreshold = e.NewValue;
         }
@@ -230,7 +230,7 @@ ITEMFINDER_API HRESULT FindMarker(uint32_t id, double threshold, Point* markerPo
             if (_items.Contains(uassetId))
             {
                 Point point = new Point();
-                FindMarker(uassetId, _searchThreshold, out point);
+                FindMarker(uassetId, _searchThreshold, 4, out point);
 
                 if (point.X >= 0)
                 {

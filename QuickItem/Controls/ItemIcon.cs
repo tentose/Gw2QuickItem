@@ -47,6 +47,8 @@ namespace QuickItem
 
         public bool AllowActivation { get; set; } = true;
 
+        public bool AllowEdit { get; set; } = false;
+
         public event EventHandler DeleteRequested;
 
         public ItemIcon()
@@ -124,13 +126,16 @@ namespace QuickItem
         {
             base.OnRightMouseButtonReleased(e);
 
-            if (m_contextMenu == null)
+            if (AllowEdit)
             {
-                BuildAndShowContextMenu();
-            }
-            else
-            {
-                m_contextMenu.Show(this);
+                if (m_contextMenu == null)
+                {
+                    BuildAndShowContextMenu();
+                }
+                else
+                {
+                    m_contextMenu.Show(this);
+                }
             }
         }
 
@@ -158,26 +163,7 @@ namespace QuickItem
                 {
                     Task.Run(async () =>
                     {
-                        const float sizeMultiplier = 0.90625f;
-                        Blish_HUD.Controls.Intern.Keyboard.Stroke(Blish_HUD.Controls.Extern.VirtualKeyShort.KEY_I);
-                        await Task.Delay(300);
-
-                        var point = ItemFinderNative.Instance.FindItem(_item.ItemAssetId);
-
-                        if (point.HasValue)
-                        {
-                            var clickPoint = point.Value;//.Multiply(sizeMultiplier);
-                            Blish_HUD.Controls.Intern.Mouse.DoubleClick(Blish_HUD.Controls.Intern.MouseButton.LEFT, clickPoint.X, clickPoint.Y);
-                            Blish_HUD.Controls.Intern.Mouse.Release(Blish_HUD.Controls.Intern.MouseButton.LEFT, clickPoint.X, clickPoint.Y);
-                        }
-                        else
-                        {
-                            ScreenNotification.ShowNotification("Can't find item", ScreenNotification.NotificationType.Error);
-                        }
-
-                        await Task.Delay(100);
-                        //this.Parent.Location = new Point(clickPoint.X, clickPoint.Y);
-                        Blish_HUD.Controls.Intern.Keyboard.Stroke(Blish_HUD.Controls.Extern.VirtualKeyShort.KEY_I);
+                        QuickItemModule.Instance.Clicker.ClickItem(_item.ItemAssetId);
                     });
                 }
             }
