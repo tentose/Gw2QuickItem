@@ -176,6 +176,15 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open configuration window.
+        /// </summary>
+        internal static string ModuleSettings_OpenManagementWindow {
+            get {
+                return ResourceManager.GetString("ModuleSettings_OpenManagementWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t find the item.
         /// </summary>
         internal static string Notification_CantFindItem {
@@ -363,6 +372,15 @@ namespace QuickItem {
         internal static string SettingsWindow_Title {
             get {
                 return ResourceManager.GetString("SettingsWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current: .
+        /// </summary>
+        internal static string SettingView_CurrentValue {
+            get {
+                return ResourceManager.GetString("SettingView_CurrentValue", resourceCulture);
             }
         }
     }

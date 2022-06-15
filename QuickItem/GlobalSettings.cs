@@ -34,19 +34,19 @@ namespace QuickItem
             WaitForInventoryOpen = settings.DefineSetting("WaitForInventoryOpen",
                                     300,
                                     () => Strings.Settings_WaitForInventoryOpen_Name,
-                                    () => Strings.Settings_WaitForInventoryOpen_Description);
+                                    () => Strings.Settings_WaitForInventoryOpen_Description + "\n" + Strings.SettingView_CurrentValue + WaitForInventoryOpen.Value);
             WaitForInventoryOpen.SetRange(100, 1000);
 
             SearchImageScale = settings.DefineSetting("SearchImageScale",
                                 0.6f,
                                 () => Strings.Settings_SearchImageScale_Name,
-                                () => Strings.Settings_SearchImageScale_Description);
+                                () => Strings.Settings_SearchImageScale_Description + "\n" + Strings.SettingView_CurrentValue + SearchImageScale.Value);
             SearchImageScale.SetRange(0.3f, 1.0f);
 
             SearchAcceptThreshold = settings.DefineSetting("SearchAcceptThreshold",
                                 0.1f,
                                 () => Strings.Settings_SearchAcceptThreshold_Name,
-                                () => Strings.Settings_SearchAcceptThreshold_Description);
+                                () => Strings.Settings_SearchAcceptThreshold_Description + "\n" + Strings.SettingView_CurrentValue + SearchAcceptThreshold.Value);
             SearchAcceptThreshold.SetRange(0.01f, 0.2f);
 
             OutputDebugImages = settings.DefineSetting("OutputDebugImages",

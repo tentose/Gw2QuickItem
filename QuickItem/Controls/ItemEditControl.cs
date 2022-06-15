@@ -219,7 +219,7 @@ namespace QuickItem.Controls
             var lowerTerm = term.ToLowerInvariant();
 
             return StaticItemInfo.AllItems
-                .Where(item => item.Value.Name.ToLowerInvariant().Contains(term))
+                .Where(item => item.Value.Name.ToLowerInvariant().Contains(lowerTerm))
                 .Take(5)
                 .Select(item => new SearchResult()
                 {

@@ -156,10 +156,11 @@ Quick items involves 3 parts:
         Ex: PvE vs WvW layouts.
 
 Quick start:
-    1. Go to the next tab on the left (Settings) and make sure the “Inventory keybind” is set as the same one you use in GW2.
+    0. Open the configuration window if you haven't already.
+    1. Go to the 2nd on the left (Settings) and make sure the “Inventory keybind” is set as the same one you use in GW2.
     2. Go to the 3rd tab on the left (Groups). 
         Select the Default group. 
-        In the “Group Items” area, right click on the orange rectangle and choose “Edit this item”.
+        In the “Group Items” area, click "Add item" then right click on the orange rectangle and choose “Edit this item”.
     3. In the window that pops out, type “Superior Sharpening Stone” (or any other consumable). 
         Click on the suggestion in the dropdown, then click Confirm.
     4. Click on the button “Add to Layout” on the right side of the window. 
@@ -177,6 +178,9 @@ Important notes:
   </data>
   <data name="ItemEdit_DefaultNameLabel" xml:space="preserve">
     <value>Enter item name to search</value>
+  </data>
+  <data name="ModuleSettings_OpenManagementWindow" xml:space="preserve">
+    <value>Open configuration window</value>
   </data>
   <data name="Notification_CantFindItem" xml:space="preserve">
     <value>Can't find the item</value>
@@ -249,5 +253,8 @@ Max: 1000ms</value>
   </data>
   <data name="Settings_WaitForInventoryOpen_Name" xml:space="preserve">
     <value>Wait for inventory open</value>
+  </data>
+  <data name="SettingView_CurrentValue" xml:space="preserve">
+    <value>Current: </value>
   </data>
 </root>

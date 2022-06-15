@@ -26,7 +26,7 @@ namespace QuickItem
             Emblem = QuickItemModule.Instance.ContentsManager.GetTexture(@"Textures\WindowIcon.png");
 
             Tabs.Add(new Tab(Content.DatAssetCache.GetTextureFromAssetId(1508665), () => new HowToUseView(), Strings.SettingsWindow_InfoTabName));
-            Tabs.Add(new Tab(Content.DatAssetCache.GetTextureFromAssetId(156706), () => new SettingsView(QuickItemModule.Instance.GlobalSettings.Settings), Strings.SettingsWindow_SettingsTabName));
+            Tabs.Add(new Tab(Content.DatAssetCache.GetTextureFromAssetId(156706), () => new InternalSettingsView(QuickItemModule.Instance.GlobalSettings.Settings), Strings.SettingsWindow_SettingsTabName));
             Tabs.Add(new Tab(QuickItemModule.Instance.ContentsManager.GetTexture(@"Textures\Group.png"), () => new GroupsManagementView(QuickItemModule.Instance.GroupCollection), Strings.SettingsWindow_GroupsTabName));
             Tabs.Add(new Tab(QuickItemModule.Instance.ContentsManager.GetTexture(@"Textures\Layout.png"), () => new LayoutsManagementView(QuickItemModule.Instance.LayoutCollection), Strings.SettingsWindow_LayoutsTabName));
 

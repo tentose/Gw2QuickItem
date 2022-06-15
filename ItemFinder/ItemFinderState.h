@@ -5,10 +5,6 @@ namespace ItemFinder
 
 struct ItemFinderState
 {
-    ItemFinderState();
-
-    void FindMarker();
-
     ScreenCaptureWinRT capture;
     HWND lastHwnd = nullptr;
     MarkerFinder finder;
