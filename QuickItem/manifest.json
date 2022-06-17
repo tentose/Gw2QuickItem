@@ -5,7 +5,7 @@
   "package": "QuickItem.dll",
   "manifest_version": 1,
 
-  "description": "Searches for items across your account",
+  "description": "Quick items lets you put shortcuts to your inventory items anywhere on your screen. It does this by opening your inventory, looking (without scrolling) in your inventory, finding the item, and double clicking the item.",
   "dependencies": {
     "bh.blishhud": ">=0.11.8"
   },

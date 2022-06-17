@@ -17,6 +17,12 @@ using System.Threading.Tasks;
 
 namespace QuickItem
 {
+    public enum InteractionInput
+    {
+        SingleClick,
+        DoubleClick,
+    }
+
     public class ItemIcon : Control, IHasContextMenu
     {
         private static readonly Logger Logger = Logger.GetLogger<QuickItemModule>();
@@ -24,6 +30,7 @@ namespace QuickItem
         private const int DEFAULT_ICON_SIZE = ((int)IconSize.Larger);
 
         private static Texture2D ItemPlaceholder;
+        private static Texture2D ItemNotFound;
 
         public static async Task LoadIconResources()
         {
@@ -32,6 +39,7 @@ namespace QuickItem
                 var contentsManager = QuickItemModule.Instance.ContentsManager;
 
                 ItemPlaceholder = contentsManager.GetTexture(@"Textures\ExoticBorder.png");
+                ItemNotFound = contentsManager.GetTexture(@"Textures\IconNotFound.png");
             });
         }
 
@@ -89,7 +97,10 @@ namespace QuickItem
 
                         if (_item.ItemAssetId != 0)
                         {
-                            _image = AsyncTexture2D.FromAssetId(_item.ItemAssetId);
+                            if (!AsyncTexture2D.TryFromAssetId(_item.ItemAssetId, out _image))
+                            {
+                                _image = ItemNotFound;
+                            }
                         }
                         else
                         {
@@ -155,7 +166,7 @@ namespace QuickItem
         {
             base.OnClick(e);
 
-            if (AllowActivation && _item.ItemAssetId != 0)
+            if (IsActivationTrigger(e) && AllowActivation && _item.ItemAssetId != 0)
             {
                 var iconPath = Content.DatAssetCache.GetLocalTexturePath(_item.ItemAssetId);
 
@@ -166,6 +177,19 @@ namespace QuickItem
                         QuickItemModule.Instance.Clicker.ClickItem(_item.ItemAssetId);
                     });
                 }
+            }
+        }
+
+        private bool IsActivationTrigger(MouseEventArgs e)
+        {
+            var value = QuickItemModule.Instance.GlobalSettings.ActivationTrigger.Value;
+            if (e.IsDoubleClick)
+            {
+                return value == InteractionInput.DoubleClick;
+            }
+            else
+            {
+                return value == InteractionInput.SingleClick;
             }
         }
 

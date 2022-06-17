@@ -194,6 +194,24 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose what action will activate the item. Single click may result in accidential activation..
+        /// </summary>
+        internal static string Settings_ActivationTrigger_Description {
+            get {
+                return ResourceManager.GetString("Settings_ActivationTrigger_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item activation trigger.
+        /// </summary>
+        internal static string Settings_ActivationTrigger_Name {
+            get {
+                return ResourceManager.GetString("Settings_ActivationTrigger_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of the active layout. .
         /// </summary>
         internal static string Settings_ActiveLayout_Description {

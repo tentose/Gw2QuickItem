@@ -200,6 +200,12 @@ Important notes:
   <data name="SettingsWindow_Title" xml:space="preserve">
     <value>Quick items settings</value>
   </data>
+  <data name="Settings_ActivationTrigger_Description" xml:space="preserve">
+    <value>Choose what action will activate the item. Single click may result in accidential activation.</value>
+  </data>
+  <data name="Settings_ActivationTrigger_Name" xml:space="preserve">
+    <value>Item activation trigger</value>
+  </data>
   <data name="Settings_ActiveLayout_Description" xml:space="preserve">
     <value>Name of the active layout. </value>
   </data>

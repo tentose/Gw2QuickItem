@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace QuickItem
 {
+
     public class GlobalSettings
     {
         public SettingCollection Settings { get; private set; }
@@ -18,6 +19,7 @@ namespace QuickItem
         public SettingEntry<float> SearchImageScale { get; private set; }
         public SettingEntry<float> SearchAcceptThreshold { get; private set; }
         public SettingEntry<bool> OutputDebugImages { get; private set; }
+        public SettingEntry<InteractionInput> ActivationTrigger { get; private set; }
 
         public GlobalSettings(SettingCollection settings)
         {
@@ -36,6 +38,11 @@ namespace QuickItem
                                     () => Strings.Settings_WaitForInventoryOpen_Name,
                                     () => Strings.Settings_WaitForInventoryOpen_Description + "\n" + Strings.SettingView_CurrentValue + WaitForInventoryOpen.Value);
             WaitForInventoryOpen.SetRange(100, 1000);
+
+            ActivationTrigger = settings.DefineSetting("ActivationTrigger",
+                                    InteractionInput.SingleClick,
+                                    () => Strings.Settings_ActivationTrigger_Name,
+                                    () => Strings.Settings_ActivationTrigger_Description);
 
             SearchImageScale = settings.DefineSetting("SearchImageScale",
                                 0.6f,
