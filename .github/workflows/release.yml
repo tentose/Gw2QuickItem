@@ -20,13 +20,13 @@ jobs:
       - name: Release
         uses: actions/create-release@v1
         id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: false
           prerelease: false
           release_name: ${{ needs.call-build-workflow.outputs.build_version }}
           tag_name: ${{ needs.call-build-workflow.outputs.build_version }}-${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload Release Asset
         id: upload-release-asset 
