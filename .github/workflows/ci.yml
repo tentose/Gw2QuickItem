@@ -9,46 +9,5 @@ on:
       - feature/ci
 
 jobs:
-  build:
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-          submodules: recursive
-
-      - name: Setup msbuild
-        uses: microsoft/setup-msbuild@v1.1
-
-      - name: Restore
-        shell: powershell
-        run: |
-          cd ItemFinder
-          . ".\BuildExternals.ps1"
-          BuildOpenCvForWindows "x64" $TRUE
-
-      - name: Restore
-        shell: powershell
-        run: |
-          msbuild QuickItem.sln /t:Restore /p:RestorePackagesConfig=true /p:configuration=Release
-
-      - name: Build
-        shell: powershell
-        run: |
-          msbuild QuickItem.sln /t:build /p:configuration=Release -maxcpucount
-
-      - name: Set Version Variable
-        id: version
-        shell: powershell
-        run: |
-          $json = Get-Content .\QuickItem\manifest.json -Raw | ConvertFrom-Json
-          $v = "$($json.version)-${{ github.run_number }}"
-          echo "::set-output name=build_version::${v}"
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v1
-        with:
-          name: quickitem_${{steps.version.outputs.build_version}}
-          path: QuickItem/bin/Release
+  call-build-workflow:
+    uses: ./.github/workflows/build.yml

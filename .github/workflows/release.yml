@@ -1,0 +1,34 @@
+name: Release
+
+on: [workflow_dispatch]
+
+jobs:
+  call-build-workflow:
+    uses: ./.github/workflows/build.yml
+
+  build:
+    runs-on: windows-latest
+    needs: call-build-workflow
+
+    steps:
+      - name: Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ needs.call-build-workflow.outputs.build_version }}
+          tag_name: ${{ needs.call-build-workflow.outputs.build_version }}-${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: QuickItem/bin/Release/QuickItem.bhm
+          asset_name: pentose.quickitem_${{ needs.call-build-workflow.outputs.module_version }}.bhm
+          asset_content_type: application/zip
