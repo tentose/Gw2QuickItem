@@ -9,6 +9,9 @@ on:
       build_version:
         description: "Module + build version"
         value: ${{ jobs.build.outputs.build_version }}
+      opencv_version:
+        description: "Module + build version"
+        value: ${{ jobs.build.outputs.opencv_version }}
 
 jobs:
   build:
@@ -17,6 +20,7 @@ jobs:
     outputs:
       module_version: ${{ steps.version.outputs.module_version }}
       build_version: ${{ steps.version.outputs.build_version }}
+      opencv_version: ${{ steps.version.outputs.opencv_version }}
 
     steps:
       - name: Checkout
@@ -28,23 +32,6 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Restore
-        shell: powershell
-        run: |
-          cd ItemFinder
-          . ".\BuildExternals.ps1"
-          BuildOpenCvForWindows "x64" $TRUE
-
-      - name: Restore
-        shell: powershell
-        run: |
-          msbuild QuickItem.sln /t:Restore /p:RestorePackagesConfig=true /p:configuration=Release
-
-      - name: Build
-        shell: powershell
-        run: |
-          msbuild QuickItem.sln /t:build /p:configuration=Release -maxcpucount
-
       - name: Set Version Variable
         id: version
         shell: powershell
@@ -54,9 +41,42 @@ jobs:
           $buildver = "$($json.version)-${{ github.run_number }}"
           echo "::set-output name=module_version::${modulever}"
           echo "::set-output name=build_version::${buildver}"
+          $opencvVersion = Get-Content .\ItemFinder\External\opencv.version
+          echo "::set-output name=opencv_version::${opencvVersion}"
+
+      - name: Restore OpenCV from cache
+        uses: actions/cache@v3
+        with:
+          key: ${{ steps.version.outputs.opencv_version }}
+          path: .\ItemFinder\External\opencv_build_win_x64
+
+      - name: Build OpenCV
+        shell: powershell
+        run: |
+          if ( -not (Test-Path '.\ItemFinder\External\opencv_build_win_x64') ) {
+            cd ItemFinder
+            . ".\BuildExternals.ps1"
+            BuildOpenCvForWindows "x64" $TRUE
+          }
+
+      - name: Restore Packages
+        shell: powershell
+        run: |
+          msbuild QuickItem.sln /t:Restore /p:RestorePackagesConfig=true /p:configuration=Release
+
+      - name: Restore Output
+        uses: actions/cache@v3
+        with:
+          key: QuickItem-bin-${{ github.sha }}
+          path: .\QuickItem\bin
+
+      - name: Build
+        shell: powershell
+        run: |
+          msbuild QuickItem.sln /t:build /p:configuration=Release -maxcpucount
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: quickitem_${{steps.version.outputs.build_version}}
+          name: quickitem_${{ steps.version.outputs.build_version }}
           path: QuickItem/bin/Release

@@ -11,6 +11,12 @@ jobs:
     needs: call-build-workflow
 
     steps:
+      - name: Restore Output
+        uses: actions/cache@v3
+        with:
+          key: QuickItem-bin-${{ github.sha }}
+          path: .\QuickItem\bin
+
       - name: Release
         uses: actions/create-release@v1
         id: create_release

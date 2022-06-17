@@ -1,7 +1,5 @@
 function BuildOpenCvForWindows($platform, $runMsbuild) {
 
-    #$ErrorActionPreference = "Stop"
-
     pushd .\External
 
     $buildDirectory = "opencv_build_win_${platform}"
