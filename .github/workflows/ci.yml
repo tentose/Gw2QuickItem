@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - feature/ci
 
 jobs:
   build:
@@ -24,7 +25,8 @@ jobs:
       - name: Restore
         shell: powershell
         run: |
-          . ".\ItemFinder\BuildExternals.ps1"
+          cd ItemFinder
+          . ".\BuildExternals.ps1"
           BuildOpenCvForWindows "x64" $TRUE
 
       - name: Restore
