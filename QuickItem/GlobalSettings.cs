@@ -15,6 +15,8 @@ namespace QuickItem
 
         public SettingEntry<string> ActiveLayout { get; private set; }
         public SettingEntry<KeyBinding> InventoryKeybind { get; private set; }
+        public SettingEntry<bool> ShowOnLoadingScreen { get; private set; }
+        public SettingEntry<bool> ShowCornerIcon { get; private set; }
         public SettingEntry<int> WaitForInventoryOpen { get; private set; }
         public SettingEntry<float> SearchImageScale { get; private set; }
         public SettingEntry<float> SearchAcceptThreshold { get; private set; }
@@ -33,6 +35,16 @@ namespace QuickItem
             InventoryKeybind.Value.BlockSequenceFromGw2 = false;
             InventoryKeybind.Value.Enabled = true;
 
+            ShowOnLoadingScreen = settings.DefineSetting("ShowOnLoadingScreen",
+                                    false,
+                                    () => Strings.Settings_ShowOnLoadingScreen_Name,
+                                    () => Strings.Settings_ShowOnLoadingScreen_Description);
+
+            ShowCornerIcon = settings.DefineSetting("ShowCornerIcon",
+                                    true,
+                                    () => Strings.Settings_ShowCornerIcon_Name,
+                                    () => Strings.Settings_ShowCornerIcon_Description);
+
             WaitForInventoryOpen = settings.DefineSetting("WaitForInventoryOpen",
                                     300,
                                     () => Strings.Settings_WaitForInventoryOpen_Name,
@@ -40,7 +52,7 @@ namespace QuickItem
             WaitForInventoryOpen.SetRange(100, 1000);
 
             ActivationTrigger = settings.DefineSetting("ActivationTrigger",
-                                    InteractionInput.SingleClick,
+                                    InteractionInput.DoubleClick,
                                     () => Strings.Settings_ActivationTrigger_Name,
                                     () => Strings.Settings_ActivationTrigger_Description);
 

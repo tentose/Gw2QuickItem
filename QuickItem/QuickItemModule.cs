@@ -90,7 +90,9 @@ namespace QuickItem
                 Icon = ContentsManager.GetTexture(@"Textures\CornerIcon.png"),
                 HoverIcon = ContentsManager.GetTexture(@"Textures\CornerIconHover.png"),
                 LoadingMessage = Strings.CornerIcon_Loading,
+                Visible = GlobalSettings.ShowCornerIcon.Value,
             };
+            GlobalSettings.ShowCornerIcon.SettingChanged += ShowCornerIcon_SettingChanged;
 
             _operatingDirectory = DirectoriesManager.GetFullDirectoryPath(OPERATING_DIRECTORY);
 
@@ -141,7 +143,9 @@ namespace QuickItem
             {
                 ActiveLayout = activeLayout,
                 Parent = GameService.Graphics.SpriteScreen,
+                Visible = GameService.GameIntegration.Gw2Instance.IsInGame || GlobalSettings.ShowOnLoadingScreen.Value,
             };
+            GameService.GameIntegration.Gw2Instance.IsInGameChanged += Gw2Instance_IsInGameChanged;
 
             Clicker = new ItemClicker();
 
@@ -157,6 +161,23 @@ namespace QuickItem
 
             _searchIcon.Click += _searchIcon_Click;
             _searchIcon.LoadingMessage = null;
+        }
+
+        private void ShowCornerIcon_SettingChanged(object sender, ValueChangedEventArgs<bool> e)
+        {
+            _searchIcon.Visible = e.NewValue;
+        }
+
+        private void Gw2Instance_IsInGameChanged(object sender, ValueEventArgs<bool> e)
+        {
+            if (e.Value && !LayoutContainer.Visible)
+            {
+                LayoutContainer.Show();
+            }
+            else if (!e.Value && !GlobalSettings.ShowOnLoadingScreen.Value)
+            {
+                LayoutContainer.Hide();
+            }
         }
 
         private string LocaleToPathString(Gw2Sharp.WebApi.Locale locale)

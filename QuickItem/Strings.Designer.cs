@@ -328,6 +328,42 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show corner icon for quick access to the config screen in the bar in the upper left corner of the screen.
+        /// </summary>
+        internal static string Settings_ShowCornerIcon_Description {
+            get {
+                return ResourceManager.GetString("Settings_ShowCornerIcon_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show corner icon.
+        /// </summary>
+        internal static string Settings_ShowCornerIcon_Name {
+            get {
+                return ResourceManager.GetString("Settings_ShowCornerIcon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show item icons on loading screen and character select..
+        /// </summary>
+        internal static string Settings_ShowOnLoadingScreen_Description {
+            get {
+                return ResourceManager.GetString("Settings_ShowOnLoadingScreen_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show on loading screen.
+        /// </summary>
+        internal static string Settings_ShowOnLoadingScreen_Name {
+            get {
+                return ResourceManager.GetString("Settings_ShowOnLoadingScreen_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time to wait for inventory to open before attempting to click on the item. Leave as default unless your inventory opens particularly slow.
         ///Min: 100ms
         ///Default: 300ms

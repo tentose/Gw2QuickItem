@@ -167,7 +167,7 @@ Quick start:
         The group will show up in the upper left corner of your game window. 
         Drag it on your screen to where you want to place it.
     5. Close the “Quick items settings” window (clicking on items will not trigger them while the window is open).
-    6. Click on the item you added. Your inventory window should open and then close and you’ll have used the item.
+    6. Double click on the item you added. Your inventory window should open and then close and you’ll have used the item.
 
 Important notes:
     1. Quick items will not scroll your inventory window. 
@@ -250,6 +250,18 @@ Max: 1.00</value>
   </data>
   <data name="Settings_SearchMode_Name" xml:space="preserve">
     <value>Search mode</value>
+  </data>
+  <data name="Settings_ShowCornerIcon_Description" xml:space="preserve">
+    <value>Show corner icon for quick access to the config screen in the bar in the upper left corner of the screen</value>
+  </data>
+  <data name="Settings_ShowCornerIcon_Name" xml:space="preserve">
+    <value>Show corner icon</value>
+  </data>
+  <data name="Settings_ShowOnLoadingScreen_Description" xml:space="preserve">
+    <value>Show item icons on loading screen and character select.</value>
+  </data>
+  <data name="Settings_ShowOnLoadingScreen_Name" xml:space="preserve">
+    <value>Show on loading screen</value>
   </data>
   <data name="Settings_WaitForInventoryOpen_Description" xml:space="preserve">
     <value>Time to wait for inventory to open before attempting to click on the item. Leave as default unless your inventory opens particularly slow.

@@ -24,6 +24,8 @@ namespace QuickItem
 
     public class GroupConfigPresenter : Presenter<GroupConfigView, ItemGroupInfo>
     {
+        private SettingEntry<IconSize> _iconSizeSetting;
+
         public List<SettingEntry> GroupSettings { get; private set; } = new List<SettingEntry>();
 
         public GroupConfigPresenter(GroupConfigView view, ItemGroupInfo model) : base(view, model)
@@ -45,11 +47,11 @@ namespace QuickItem
             {
                 groupIconSize = FindClosestSize(firstItem.IconSize);
             }
-            var iconSizeSetting = SettingEntry<IconSize>.InitSetting(groupIconSize);
-            iconSizeSetting.GetDisplayNameFunc = () => "Icon Size";
-            iconSizeSetting.GetDescriptionFunc = () => "Icon size";
-            GroupSettings.Add(iconSizeSetting);
-            iconSizeSetting.SettingChanged += IconSizeSetting_SettingChanged;
+            _iconSizeSetting = SettingEntry<IconSize>.InitSetting(groupIconSize);
+            _iconSizeSetting.GetDisplayNameFunc = () => "Icon Size";
+            _iconSizeSetting.GetDescriptionFunc = () => "Icon size";
+            GroupSettings.Add(_iconSizeSetting);
+            _iconSizeSetting.SettingChanged += IconSizeSetting_SettingChanged;
 
             View.AddItemClicked += View_AddItemClicked;
             View.AddToLayoutClicked += View_AddToLayoutClicked;
@@ -94,7 +96,10 @@ namespace QuickItem
 
         private void View_AddItemClicked(object sender, EventArgs e)
         {
-            Model.Items.Add(new ItemIconInfo());
+            Model.Items.Add(new ItemIconInfo()
+            {
+                IconSize = (int)_iconSizeSetting.Value,
+            });
             UpdateView();
         }
 
