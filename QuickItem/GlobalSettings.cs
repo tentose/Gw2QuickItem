@@ -16,6 +16,8 @@ namespace QuickItem
         public SettingEntry<string> ActiveLayout { get; private set; }
         public SettingEntry<KeyBinding> InventoryKeybind { get; private set; }
         public SettingEntry<bool> ShowOnLoadingScreen { get; private set; }
+        public SettingEntry<bool> ShowInCombat { get; private set; }
+        public SettingEntry<bool> ShowOnMap { get; private set; }
         public SettingEntry<bool> ShowCornerIcon { get; private set; }
         public SettingEntry<int> WaitForInventoryOpen { get; private set; }
         public SettingEntry<float> SearchImageScale { get; private set; }
@@ -39,6 +41,16 @@ namespace QuickItem
                                     false,
                                     () => Strings.Settings_ShowOnLoadingScreen_Name,
                                     () => Strings.Settings_ShowOnLoadingScreen_Description);
+
+            ShowInCombat = settings.DefineSetting("ShowInCombat",
+                                    true,
+                                    () => Strings.Settings_ShowInCombat_Name,
+                                    () => Strings.Settings_ShowInCombat_Description);
+
+            ShowOnMap = settings.DefineSetting("ShowOnMap",
+                                    false,
+                                    () => Strings.Settings_ShowOnMap_Name,
+                                    () => Strings.Settings_ShowOnMap_Description);
 
             ShowCornerIcon = settings.DefineSetting("ShowCornerIcon",
                                     true,

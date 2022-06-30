@@ -364,7 +364,25 @@ namespace QuickItem {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show item icons on loading screen and character select..
+        ///   Looks up a localized string similar to Show item icons during combat..
+        /// </summary>
+        internal static string Settings_ShowInCombat_Description {
+            get {
+                return ResourceManager.GetString("Settings_ShowInCombat_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show in combat.
+        /// </summary>
+        internal static string Settings_ShowInCombat_Name {
+            get {
+                return ResourceManager.GetString("Settings_ShowInCombat_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show item icons on loading screen, character select, and in cutscenes..
         /// </summary>
         internal static string Settings_ShowOnLoadingScreen_Description {
             get {
@@ -378,6 +396,24 @@ namespace QuickItem {
         internal static string Settings_ShowOnLoadingScreen_Name {
             get {
                 return ResourceManager.GetString("Settings_ShowOnLoadingScreen_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show item icons when the world map is open..
+        /// </summary>
+        internal static string Settings_ShowOnMap_Description {
+            get {
+                return ResourceManager.GetString("Settings_ShowOnMap_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show when map open.
+        /// </summary>
+        internal static string Settings_ShowOnMap_Name {
+            get {
+                return ResourceManager.GetString("Settings_ShowOnMap_Name", resourceCulture);
             }
         }
         

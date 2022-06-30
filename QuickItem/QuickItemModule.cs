@@ -146,6 +146,8 @@ namespace QuickItem
                 Visible = GameService.GameIntegration.Gw2Instance.IsInGame || GlobalSettings.ShowOnLoadingScreen.Value,
             };
             GameService.GameIntegration.Gw2Instance.IsInGameChanged += Gw2Instance_IsInGameChanged;
+            GameService.Gw2Mumble.PlayerCharacter.IsInCombatChanged += PlayerCharacter_IsInCombatChanged;
+            GameService.Gw2Mumble.UI.IsMapOpenChanged += UI_IsMapOpenChanged;
 
             Clicker = new ItemClicker();
 
@@ -163,6 +165,16 @@ namespace QuickItem
             _searchIcon.LoadingMessage = null;
         }
 
+        private void UI_IsMapOpenChanged(object sender, ValueEventArgs<bool> e)
+        {
+            SetLayoutVisibility();
+        }
+
+        private void PlayerCharacter_IsInCombatChanged(object sender, ValueEventArgs<bool> e)
+        {
+            SetLayoutVisibility();
+        }
+
         private void ShowCornerIcon_SettingChanged(object sender, ValueChangedEventArgs<bool> e)
         {
             _searchIcon.Visible = e.NewValue;
@@ -170,11 +182,32 @@ namespace QuickItem
 
         private void Gw2Instance_IsInGameChanged(object sender, ValueEventArgs<bool> e)
         {
-            if (e.Value && !LayoutContainer.Visible)
+            SetLayoutVisibility();
+        }
+
+        private void SetLayoutVisibility()
+        {
+            bool show = true;
+            if (!GlobalSettings.ShowOnLoadingScreen.Value && !GameService.GameIntegration.Gw2Instance.IsInGame)
+            {
+                show = false;
+            }
+
+            if (!GlobalSettings.ShowInCombat.Value && GameService.Gw2Mumble.PlayerCharacter.IsInCombat)
+            {
+                show = false;
+            }
+
+            if (!GlobalSettings.ShowOnMap.Value && GameService.Gw2Mumble.UI.IsMapOpen)
+            {
+                show = false;
+            }
+
+            if (show && !LayoutContainer.Visible)
             {
                 LayoutContainer.Show();
             }
-            else if (!e.Value && !GlobalSettings.ShowOnLoadingScreen.Value)
+            else if (!show)
             {
                 LayoutContainer.Hide();
             }

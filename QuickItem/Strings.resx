@@ -263,11 +263,23 @@ Max: 1.00</value>
   <data name="Settings_ShowCornerIcon_Name" xml:space="preserve">
     <value>Show corner icon</value>
   </data>
+  <data name="Settings_ShowInCombat_Description" xml:space="preserve">
+    <value>Show item icons during combat.</value>
+  </data>
+  <data name="Settings_ShowInCombat_Name" xml:space="preserve">
+    <value>Show in combat</value>
+  </data>
   <data name="Settings_ShowOnLoadingScreen_Description" xml:space="preserve">
-    <value>Show item icons on loading screen and character select.</value>
+    <value>Show item icons on loading screen, character select, and in cutscenes.</value>
   </data>
   <data name="Settings_ShowOnLoadingScreen_Name" xml:space="preserve">
     <value>Show on loading screen</value>
+  </data>
+  <data name="Settings_ShowOnMap_Description" xml:space="preserve">
+    <value>Show item icons when the world map is open.</value>
+  </data>
+  <data name="Settings_ShowOnMap_Name" xml:space="preserve">
+    <value>Show when map open</value>
   </data>
   <data name="Settings_WaitForInventoryOpen_Description" xml:space="preserve">
     <value>Time to wait for inventory to open before attempting to click on the item. Leave as default unless your inventory opens particularly slow.
