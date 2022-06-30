@@ -1,4 +1,4 @@
-# Quick Items
+# Gw2QuickItem
 
 QuickItems is a module for [Blish HUD](https://github.com/blish-hud/Blish-HUD). This module lets you put shortcuts to your inventory items anywhere on your screen. It does this by opening your inventory, looking (without scrolling) in your inventory, finding the item, and double clicking the item.
 
