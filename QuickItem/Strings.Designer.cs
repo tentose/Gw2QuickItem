@@ -176,6 +176,24 @@ namespace QuickItem {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Optionally set a keybind to activate this item.
+        /// </summary>
+        internal static string ItemEdit_Settings_Keybind_Description {
+            get {
+                return ResourceManager.GetString("ItemEdit_Settings_Keybind_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keybind.
+        /// </summary>
+        internal static string ItemEdit_Settings_Keybind_Name {
+            get {
+                return ResourceManager.GetString("ItemEdit_Settings_Keybind_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open configuration window.
         /// </summary>
         internal static string ModuleSettings_OpenManagementWindow {

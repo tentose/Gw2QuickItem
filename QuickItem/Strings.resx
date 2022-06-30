@@ -179,6 +179,12 @@ Important notes:
   <data name="ItemEdit_DefaultNameLabel" xml:space="preserve">
     <value>Enter item name to search</value>
   </data>
+  <data name="ItemEdit_Settings_Keybind_Description" xml:space="preserve">
+    <value>Optionally set a keybind to activate this item</value>
+  </data>
+  <data name="ItemEdit_Settings_Keybind_Name" xml:space="preserve">
+    <value>Keybind</value>
+  </data>
   <data name="ModuleSettings_OpenManagementWindow" xml:space="preserve">
     <value>Open configuration window</value>
   </data>

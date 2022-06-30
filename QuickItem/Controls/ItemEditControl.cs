@@ -1,6 +1,7 @@
 ﻿using Blish_HUD;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
+using Blish_HUD.Input;
 using Blish_HUD.Settings;
 using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
@@ -40,6 +41,7 @@ namespace QuickItem.Controls
         private ItemIconInfo _itemInfo;
         private FlowPanel _itemSettings;
         private SettingEntry<IconSearchMode> _searchModeSetting;
+        private SettingEntry<KeyBinding> _keybind;
 
         public event EventHandler<SearchResult> SearchCompleted;
 
@@ -130,6 +132,20 @@ namespace QuickItem.Controls
                 settingContainer.Show(settingView);
             }
 
+            _keybind = SettingEntry<KeyBinding>.InitSetting(new KeyBinding());
+            _keybind.GetDisplayNameFunc = () => Strings.ItemEdit_Settings_Keybind_Name;
+            _keybind.GetDescriptionFunc = () => Strings.ItemEdit_Settings_Keybind_Description;
+            if ((settingView = SettingView.FromType(_searchModeSetting, 150)) != null)
+            {
+                var settingContainer = new ViewContainer()
+                {
+                    WidthSizingMode = SizingMode.Fill,
+                    HeightSizingMode = SizingMode.AutoSize,
+                    //Parent = _itemSettings,
+                };
+                settingContainer.Show(settingView);
+            }
+
             _confirmButton = new StandardButton()
             {
                 Text = Strings.Button_Confirm,
@@ -189,6 +205,9 @@ namespace QuickItem.Controls
                     StaticItemInfo.WriteAllToFile();
                 }
             }
+
+            _itemInfo.KeyBind = _keybind.Value;
+
             SearchCompleted?.Invoke(this, _result);
             this.Hide();
             if (CurrentInstance == this)

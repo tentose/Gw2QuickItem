@@ -232,5 +232,11 @@ namespace QuickItem
                 //}
             }
         }
+
+        protected override void DisposeControl()
+        {
+            base.DisposeControl();
+
+        }
     }
 }
