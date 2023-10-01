@@ -28,7 +28,7 @@ namespace QuickItem
         private const string NATIVE_DIRECTORY = "dlls";
         private const string CACHE_DIRECTORY = "cache";
         private const string DEBUG_DIRECTORY = "debug";
-        private const string STATIC_ITEMS_FILE_NAME = "all_items.json";
+        private const string STATIC_ITEMS_FILE_NAME = "all_qitems.json";
         private const string CACHE_VERSION_FILE_NAME = "cache_version.json";
 
         private SettingsManager m_settingsManager => this.ModuleParameters.SettingsManager;
