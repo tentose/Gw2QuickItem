@@ -1,13 +1,13 @@
 ﻿{
   "name": "Quick Items",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "namespace": "pentose.quickitems",
   "package": "QuickItem.dll",
   "manifest_version": 1,
 
   "description": "Quick items lets you put shortcuts to your inventory items anywhere on your screen. It does this by opening your inventory, looking (without scrolling) in your inventory, finding the item, and double clicking the item.",
   "dependencies": {
-    "bh.blishhud": ">=0.11.8"
+    "bh.blishhud": ">=1.0.0"
   },
   "url": "https://github.com/blish-hud/Blish-HUD",
   "contributors": [
